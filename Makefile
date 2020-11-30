@@ -1,8 +1,14 @@
 NAME		=	Cub3D
 
-SRCS		=	srcs/main.c									\
+SRCS		=	srcs/main.c		\
+				srcs/debug.c	\
 				srcs/get_next_line/get_next_line.c			\
-				srcs/get_next_line/get_next_line_utils.c
+				srcs/get_next_line/get_next_line_utils.c	\
+				srcs/initialize.c		\
+				srcs/free.c				\
+				srcs/errors/parsing.c	\
+				srcs/parsing/scene.c	\
+				srcs/parsing/utils.c
 
 OBJS		=	$(SRCS:.c=.o)
 
@@ -12,13 +18,14 @@ LIBMLX		=	minilibx_linux/libmlx.a
 LIBSFLAGS	=	$(LIBFT) $(LIBMLX) -lXext -lX11 -lm -lbsd
 
 
-CC			=	clang-9
-CFLAGS		=	-Wall -Wextra -Werror -I./includes/ -I./libft/ -I./minilibx_linux/
+CC			=	gcc
+CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address \
+				-I./libft/ -I./minilibx_linux/ -I./includes/
 
 all			:	$(NAME)
 
 $(LIBFT)	:
-				make -C libft/
+				make bonus -C libft/
 
 $(LIBMLX)	:
 				make -C minilibx_linux/

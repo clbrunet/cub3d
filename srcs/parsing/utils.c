@@ -1,38 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/28 18:09:29 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/28 18:25:23 by clbrunet         ###   ########.fr       */
+/*   Created: 2020/11/29 15:09:02 by clbrunet          #+#    #+#             */
+/*   Updated: 2020/11/29 15:09:02 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "parsing.h"
 
-int		main(int ac, char **av)
+int		ft_atoitrim(char const **nptr)
 {
-	t_vars	v;
+	int		nb;
 
-	if (ac < 2 || ac > 3) // wrong nb of args
-		return (1);
-	else if (ac == 2)
+	if (!ft_isdigit(**nptr))
+		return (-1);
+	nb = **nptr - '0';
+	(*nptr)++;
+	while (ft_isdigit(**nptr))
 	{
-		initialize_config(&v.config);
-		v.map.grid = NULL;
-		parse_scene(av[1], &v);
-		print_config(&v.config);
-		print_map(v.map.grid);
-		printf_player(&v.player);
-		free_config(&v.config);
-		free_strs(v.map.grid);
-
+		nb = nb * 10 + **nptr - '0';
+		(*nptr)++;
 	}
-	else
-	{
-		// --save
-	}
-	return (0);
+	return (nb);
 }

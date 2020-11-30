@@ -1,38 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   vars.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/28 18:09:29 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/28 18:25:23 by clbrunet         ###   ########.fr       */
+/*   Created: 2020/11/29 09:57:41 by clbrunet          #+#    #+#             */
+/*   Updated: 2020/11/29 10:03:32 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "initialization.h"
 
-int		main(int ac, char **av)
+void	initialize_config(t_config *config)
 {
-	t_vars	v;
-
-	if (ac < 2 || ac > 3) // wrong nb of args
-		return (1);
-	else if (ac == 2)
-	{
-		initialize_config(&v.config);
-		v.map.grid = NULL;
-		parse_scene(av[1], &v);
-		print_config(&v.config);
-		print_map(v.map.grid);
-		printf_player(&v.player);
-		free_config(&v.config);
-		free_strs(v.map.grid);
-
-	}
-	else
-	{
-		// --save
-	}
-	return (0);
+	config->res.x = -1;
+	config->res.y = -1;
+	config->textures.north = NULL;
+	config->textures.south = NULL;
+	config->textures.west = NULL;
+	config->textures.east = NULL;
+	config->textures.sprite = NULL;
+	config->ceilling_color.full = -1;
+	config->floor_color.full = -1;
 }
