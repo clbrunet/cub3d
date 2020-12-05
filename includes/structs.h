@@ -13,11 +13,17 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
-typedef struct	s_vector
+typedef struct	s_dvector
+{
+	double	x;
+	double	y;
+}				t_dvector;
+
+typedef struct	s_ivector
 {
 	int		x;
 	int		y;
-}				t_vector;
+}				t_ivector;
 
 typedef struct	s_textures
 {
@@ -34,34 +40,58 @@ typedef union	u_color
 	unsigned char	bytes[4];
 }				t_color;
 
-typedef struct	s_config
+typedef struct	s_colors
 {
-	t_vector	res;
-	t_textures	textures;
-	t_color		floor_color;
-	t_color		ceilling_color;
-}				t_config;
+	t_color		floor;
+	t_color		ceilling;
+}				t_colors;
 
 typedef struct	s_player
 {
-	int			fov;
+	double		x;
+	double		y;
+	double		angle;
+	double		fov;
 	int			height;
-	t_vector	pos;
-	int			angle;
 }				t_player;
 
 typedef struct	s_map
 {
 	char		**grid;
-	t_vector	max;
+	double		minimap_factor;
+	t_ivector	max;
 }				t_map;
+
+typedef struct	s_img_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_img_data;
+
+typedef struct	s_keys
+{
+	char	w;
+	char	a;
+	char	s;
+	char	d;
+	char	left;
+	char	right;
+}				t_keys;
 
 typedef struct	s_vars
 {
 	void		*mlx;
-	t_config	config;
+	void		*win;
+	t_img_data	img;
+	t_ivector	res;
+	t_textures	textures;
+	t_colors	colors;
 	t_map		map;
 	t_player	player;
+	double		project_dist;
+	t_keys		keys_down;
 }				t_vars;
 
 #endif

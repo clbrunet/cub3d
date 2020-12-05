@@ -1,52 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/30 10:59:09 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/30 10:59:09 by clbrunet         ###   ########.fr       */
+/*   Created: 2020/12/05 13:15:10 by clbrunet          #+#    #+#             */
+/*   Updated: 2020/12/05 13:15:10 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "errors.h"
-
-void	parsing_error(char *error_msg, t_vars *v)
-{
-	free_config(&v->config);
-	free_strs(v->map.grid);
-	ft_putendl_fd("Error", 2);
-	ft_putendl_fd(error_msg, 2);
-	exit(1);
-}
-
-void	check_elems(t_vars *v)
-{
-	if (v->config.res.x == -1)
-		parsing_error("Resolution missing.", v);
-	else if (!v->config.textures.north)
-		parsing_error("North texture missing.", v);
-	else if (!v->config.textures.south)
-		parsing_error("South texture missing.", v);
-	else if (!v->config.textures.west)
-		parsing_error("West texture missing.", v);
-	else if (!v->config.textures.east)
-		parsing_error("East texture missing.", v);
-	else if (!v->config.textures.sprite)
-		parsing_error("Sprite texture missing.", v);
-	else if (v->config.floor_color.full == -1)
-		parsing_error("Floor color missing.", v);
-	else if (v->config.ceilling_color.full == -1)
-		parsing_error("Ceilling color missing.", v);
-}
+#include "parsing.h"
 
 void	check_map(t_vars *v, int y, int x)
 {
 	if (y - 1 < 0 || !v->map.grid[y + 1] || x - 1 < 0 || !v->map.grid[y][x + 1]
 			|| v->map.grid[y + 1][x] == ' ' || v->map.grid[y - 1][x] == ' '
 			|| v->map.grid[y][x + 1] == ' ' || v->map.grid[y][x - 1] == ' ')
-		parsing_error("Map not properly closed.", v);
+		error("Map not properly closed", v, ERROR);
 	if (v->map.grid[y][x] == '2')
 		v->map.grid[y][x] = 'S';
 	else
@@ -59,4 +30,48 @@ void	check_map(t_vars *v, int y, int x)
 		check_map(v, y, x + 1);
 	if (v->map.grid[y][x - 1] == '0' || v->map.grid[y][x - 1] == '2')
 		check_map(v, y, x - 1);
+}
+
+static void	set_player_props(t_vars *v, char c, int y, int x)
+{
+	v->player.fov = M_PI / 3;
+	v->player.height = BLOCK_SIZE / 2;
+	v->player.x = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * x;
+	v->player.y = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * y;
+	if (c == 'N')
+		v->player.angle = M_PI_2;
+	else if (c == 'S')
+		v->player.angle = 3 * M_PI_2;
+	else if (c == 'W')
+		v->player.angle = M_PI;
+	else
+		v->player.angle = 0;
+}
+
+void	check_map_chars(t_vars *v)
+{
+	int		i;
+	int		j;
+	char	count;
+
+	count = 0;
+	i = -1;
+	while (v->map.grid[++i])
+	{
+		j = -1;
+		while (v->map.grid[i][++j])
+		{
+			if (ft_strchr("NSWE", v->map.grid[i][j]))
+			{
+				set_player_props(v, v->map.grid[i][j], i, j);
+				count++;
+			}
+			else if (!ft_strchr(" 012", v->map.grid[i][j]))
+				error("Map contains wrong chars", v, ERROR);
+		}
+	}
+	if (count == 0)
+		error("Player missing", v, ERROR);
+	else if (count > 1)
+		error("Multiplayer is not yet available", v, ERROR);
 }

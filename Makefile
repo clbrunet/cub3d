@@ -4,18 +4,28 @@ SRCS		=	srcs/main.c		\
 				srcs/debug.c	\
 				srcs/get_next_line/get_next_line.c			\
 				srcs/get_next_line/get_next_line_utils.c	\
-				srcs/initialize.c		\
-				srcs/free.c				\
-				srcs/errors/parsing.c	\
-				srcs/parsing/scene.c	\
-				srcs/parsing/utils.c
+				srcs/utils/free.c			\
+				srcs/utils/ft_atoitrim.c	\
+				srcs/utils/angles.c			\
+				srcs/utils/map.c			\
+				srcs/parsing/base.c			\
+				srcs/parsing/elems.c		\
+				srcs/parsing/check_elems.c	\
+				srcs/parsing/map.c			\
+				srcs/parsing/check_map.c	\
+				srcs/minilibx/base.c	\
+				srcs/minilibx/draw.c	\
+				srcs/raycasting/base.c				\
+				srcs/raycasting/utils.c				\
+				srcs/raycasting/horizontal_dist.c	\
+				srcs/raycasting/vertical_dist.c		\
 
 OBJS		=	$(SRCS:.c=.o)
 
 LIBFT		=	libft/libft.a
 LIBMLX		=	minilibx_linux/libmlx.a
 
-LIBSFLAGS	=	$(LIBFT) $(LIBMLX) -lXext -lX11 -lm -lbsd
+LIBSFLAGS	=	$(LIBFT) $(LIBMLX) -lXext -lX11 -lbsd -lm
 
 
 CC			=	gcc
@@ -33,14 +43,22 @@ $(LIBMLX)	:
 $(NAME)		:	$(LIBFT) $(LIBMLX) $(OBJS)
 				$(CC) $(CFLAGS) $(OBJS) $(LIBSFLAGS) -o $(NAME)
 
+
+cl			:
+				rm -f $(OBJS)
 clean		:
 				make clean -C libft/
 				make clean -C minilibx_linux/
 				rm -f $(OBJS)
 
+fcl			:	cl
+				rm -f $(NAME)
+
 fclean		:	clean
 				make fclean -C libft/
 				rm -f $(NAME)
+
+r			:	fcl all
 
 re			:	fclean all
 

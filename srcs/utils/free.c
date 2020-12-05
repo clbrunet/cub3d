@@ -1,26 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vars.c                                             :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/29 09:57:41 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/29 10:03:32 by clbrunet         ###   ########.fr       */
+/*   Created: 2020/11/30 06:38:37 by clbrunet          #+#    #+#             */
+/*   Updated: 2020/11/30 06:38:37 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "initialization.h"
+#include "cub3d.h"
 
-void	initialize_config(t_config *config)
+void	free_strs(char **strs)
 {
-	config->res.x = -1;
-	config->res.y = -1;
-	config->textures.north = NULL;
-	config->textures.south = NULL;
-	config->textures.west = NULL;
-	config->textures.east = NULL;
-	config->textures.sprite = NULL;
-	config->ceilling_color.full = -1;
-	config->floor_color.full = -1;
+	int		i;
+
+	if (!strs)
+		return ;
+	i = 0;
+	while (strs[i])
+	{
+		free(strs[i]);
+		i++;
+	}
+	free(strs);
+}
+
+void		free_textures(t_textures *textures)
+{
+	free(textures->north);
+	free(textures->south);
+	free(textures->west);
+	free(textures->east);
+	free(textures->sprite);
 }

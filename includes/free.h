@@ -18,6 +18,6 @@
 # include "structs.h"
 
 void	free_strs(char **strs);
-void	free_config(t_config *config);
+void	free_textures(t_textures *textures);
 
 #endif

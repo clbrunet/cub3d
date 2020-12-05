@@ -1,22 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
+/*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/16 13:53:29 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/16 13:53:29 by clbrunet         ###   ########.fr       */
+/*   Created: 2020/12/05 14:08:49 by clbrunet          #+#    #+#             */
+/*   Updated: 2020/12/05 14:08:49 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "utils.h"
 
-void	ft_putendl_fd(char const *s, int const fd)
+int		is_in_map(t_vars *v, int x, int y)
 {
-	if (s)
-	{
-		write(fd, s, ft_strlen(s));
-		write(fd, "\n", 1);
-	}
+	x >>= BLOCK_SIZE_BIT;
+	y >>= BLOCK_SIZE_BIT;
+	if (x < 0 || y < 0 || y >= v->map.max.y || x >= v->map.max.x)
+		return (0);
+	return (1);
+}
+
+int		is_wall(t_vars *v, int x, int y)
+{
+	if (v->map.grid[y >> BLOCK_SIZE_BIT][x >> BLOCK_SIZE_BIT] == '1')
+		return (1);
+	return (0);
 }

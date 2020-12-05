@@ -1,37 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   defines.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/30 06:38:37 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/30 06:38:37 by clbrunet         ###   ########.fr       */
+/*   Created: 2020/12/03 20:24:50 by clbrunet          #+#    #+#             */
+/*   Updated: 2020/12/05 14:28:43 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#ifndef DEFINES_H
+# define DEFINES_H
 
-void	free_strs(char **strs)
-{
-	int		i;
+# define BLOCK_SIZE 64
+# define BLOCK_SIZE_BIT 6
 
-	if (!strs)
-		return ;
-	i = 0;
-	while (strs[i])
-	{
-		free(strs[i]);
-		i++;
-	}
-	free(strs);
-}
+# define LEFT 65361
+# define RIGHT 65363
+# define W 119
+# define A 97
+# define S 115
+# define D 100
+# define ESC 65307
 
-void		free_config(t_config *config)
-{
-	free(config->textures.north);
-	free(config->textures.south);
-	free(config->textures.west);
-	free(config->textures.east);
-	free(config->textures.sprite);
-}
+#endif

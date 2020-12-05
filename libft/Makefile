@@ -44,7 +44,8 @@ BONUS_SRCS	=	ft_lstnew.c			\
 				ft_lstclear.c		\
 				ft_lstiter.c		\
 				ft_lstmap.c			\
-				ft_trimspaces_bonus.c
+				ft_trimspaces_bonus.c	\
+				ft_strslen_bonus.c
 
 OBJS		=	$(SRCS:.c=.o)
 BONUS_OBJS	=	$(BONUS_SRCS:.c=.o)

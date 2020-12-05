@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include "cub3d.h"
 
-void	print_res(t_vector res)
+void	print_res(t_ivector res)
 {
 	printf("----------- RESOLUTION -----------\n\n");
-	printf("X : %4i, Y : %4i\n", res.x, res.y);
+	printf("X : %4i, Y : %4i\n", (int)res.x, (int)res.y);
 }
 
 void	print_textures(t_textures textures)
@@ -17,26 +17,20 @@ void	print_textures(t_textures textures)
 	printf("S  : |%s|\n", textures.sprite);
 }
 
-void	print_colors(t_config *config)
+void	print_colors(t_colors colors)
 {
 	printf("\n------------- COLORS -------------\n\n");
-	printf("F full : %#X, %i\n", config->floor_color.full,
-			config->floor_color.full);
-	/* printf("F bytes : [0]: %3i, [1]: %3i, [2]: %3i, [3]: %3i\n", */
-			/* config->floor_color.byte[0], config->floor_color.byte[1], */
-			/* config->floor_color.byte[2], config->floor_color.byte[3]); */
-	printf("C full : %#X, %i\n", config->ceilling_color.full,
-			config->ceilling_color.full);
-	/* printf("C bytes : [0]: %3i, [1]: %3i, [2]: %3i, [3]: %3i\n", */
-	/* 		config->ceilling_color.byte[0], config->ceilling_color.byte[1], */
-	/* 		config->ceilling_color.byte[2], config->ceilling_color.byte[3]); */
+	printf("F full : %#.8X, %i\n", colors.floor.full,
+			colors.floor.full);
+	printf("C full : %#.8X, %i\n", colors.ceilling.full,
+			colors.ceilling.full);
 }
 
-void	print_config(t_config *config)
+void	print_elems(t_vars *v)
 {
-	print_res(config->res);
-	print_textures(config->textures);
-	print_colors(config);
+	print_res(v->res);
+	print_textures(v->textures);
+	print_colors(v->colors);
 }
 
 void	print_map(char **map)
@@ -51,11 +45,23 @@ void	print_map(char **map)
 	printf("|%s|\n", map[i]);
 }
 
-void	printf_player(t_player *player)
+void	print_player(t_player *player)
 {
 	printf("\n------------- PLAYER -------------\n\n");
-	printf("Pos : X: %4i, Y: %4i\n", player->pos.x, player->pos.y);
-	printf("Angle : %3i\n", player->angle);
+	printf("Pos : X: %f, Y: %f\n", player->x, player->y);
+	printf("Grid pos : X: %i, Y: %i\n", (int)player->x / 64, (int)player->y / 64);
+	printf("Angle : %f\n", player->angle);
 	printf("Height : %2i\n", player->height);
 	/* printf("FOV : %3i\n", player->fov); */
+}
+
+void	print_keys(t_keys *keys_down)
+{
+	printf("\n-------------- KEYS --------------\n\n");
+	printf("<-: %i\n", keys_down->left);
+	printf("-> %i\n", keys_down->right);
+	printf("w: %i\n", keys_down->w);
+	printf("a: %i\n", keys_down->a);
+	printf("s: %i\n", keys_down->s);
+	printf("d: %i\n", keys_down->d);
 }

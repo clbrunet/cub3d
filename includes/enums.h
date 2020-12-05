@@ -5,12 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/30 06:03:25 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/30 06:03:25 by clbrunet         ###   ########.fr       */
+/*   Created: 2020/12/01 12:05:50 by clbrunet          #+#    #+#             */
+/*   Updated: 2020/12/01 12:05:50 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENUMS_H
 # define ENUMS_H
+
+typedef enum	e_error
+{
+	PERROR,
+	ERROR
+}				t_error;
 
 #endif
