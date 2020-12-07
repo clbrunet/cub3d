@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   base.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:02:01 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/01 11:02:01 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/05 17:51:53 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,22 @@
 
 int		keypress_hook(int keycode, t_vars *v)
 {
+	/* printf("keycode: %i\n", keycode); */
 	if (keycode == ESC)
 		exit(0);
-	if (keycode == LEFT)
+	else if (keycode == LEFT)
 		v->keys_down.left = 1;
-	if (keycode == RIGHT)
+	else if (keycode == RIGHT)
 		v->keys_down.right = 1;
-	if (keycode == W)
-		v->keys_down.w = 1;
-	if (keycode == S)
+	else if (keycode == Z)
+		v->keys_down.z = 1;
+	else if (keycode == S)
 		v->keys_down.s = 1;
-	if (keycode == A)
-	{
-		printf("AAAAAAAAAa\n\n\n\nAAAAAAAAAAAAa\n\n\n");
-		v->keys_down.a = 1;
-	}
-	if (keycode == D)
+	else if (keycode == Q)
+		v->keys_down.q = 1;
+	else if (keycode == D)
 		v->keys_down.d = 1;
-	print_keys(&v->keys_down);
+	/* print_keys(&v->keys_down); */
 	return (1);
 }
 
@@ -40,77 +38,95 @@ int		keyrelease_hook(int keycode, t_vars *v)
 {
 	if (keycode == LEFT)
 		v->keys_down.left = 0;
-	if (keycode == RIGHT)
+	else if (keycode == RIGHT)
 		v->keys_down.right = 0;
-	if (keycode == W)
-		v->keys_down.w = 0;
-	if (keycode == S)
+	else if (keycode == Z)
+		v->keys_down.z = 0;
+	else if (keycode == Q)
+		v->keys_down.q = 0;
+	else if (keycode == S)
 		v->keys_down.s = 0;
-	if (keycode == A)
-		v->keys_down.a = 0;
-	if (keycode == D)
+	else if (keycode == D)
 		v->keys_down.d = 0;
 	return (1);
 }
 
-void	move(t_vars *v)
+void	move(t_vars *v, double x, double y)
+{
+	if ((M_PI_4 < v->player.angle && v->player.angle < M_PI - M_PI_4)
+			|| (M_PI + M_PI_4 < v->player.angle && v->player.angle < 7 * M_PI_4))
+	{
+		if (!is_wall(v, v->player.x, y))
+			v->player.y = y;
+		if (!is_wall(v, x, v->player.y))
+			v->player.x = x;
+	}
+	else
+	{
+		if (!is_wall(v, x, v->player.y))
+			v->player.x = x;
+		if (!is_wall(v, v->player.x, y))
+			v->player.y = y;
+	}
+}
+
+void	edit(t_vars *v)
 {
 	if (v->keys_down.left)
-		v->player.angle = normalize_angle(v->player.angle + deg_to_rad(2));
+		v->player.angle = normalize_angle(v->player.angle
+				+ deg_to_rad(v->player.speed / 3));
 	if (v->keys_down.right)
-		v->player.angle = normalize_angle(v->player.angle - deg_to_rad(2));
-	if (v->keys_down.w && !v->keys_down.s && v->keys_down.a && !v->keys_down.d)
-	{
-		v->player.x += cos(normalize_angle(v->player.angle + M_PI_4)) * 6;
-		v->player.y -= sin(normalize_angle(v->player.angle + M_PI_4)) * 6;
-	}
-	else if (v->keys_down.w && !v->keys_down.s
-			&& v->keys_down.d && !v->keys_down.a)
-	{
-		v->player.x += cos(normalize_angle(v->player.angle - M_PI_4)) * 6;
-		v->player.y -= sin(normalize_angle(v->player.angle - M_PI_4)) * 6;
-	}
-	else if (v->keys_down.s && !v->keys_down.w
-			&& v->keys_down.a && !v->keys_down.d)
-	{
-		v->player.x -= cos(normalize_angle(v->player.angle - M_PI_4)) * 6;
-		v->player.y += sin(normalize_angle(v->player.angle - M_PI_4)) * 6;
-	}
-	else if (v->keys_down.s && !v->keys_down.w
-			&& v->keys_down.d && !v->keys_down.d)
-	{
-		v->player.x -= cos(normalize_angle(v->player.angle + M_PI_4)) * 6;
-		v->player.y += sin(normalize_angle(v->player.angle + M_PI_4)) * 6;
-	}
-	else if (v->keys_down.w && !v->keys_down.s)
-	{
-		v->player.x += cos(v->player.angle) * 6;
-		v->player.y -= sin(v->player.angle) * 6;
-	}
-	else if (v->keys_down.s && !v->keys_down.w)
-	{
-		v->player.x -= cos(v->player.angle) * 6;
-		v->player.y += sin(v->player.angle) * 6;
-	}
-	else if (v->keys_down.a && !v->keys_down.d)
-	{
-		v->player.x += cos(v->player.angle + M_PI_2) * 4;
-		v->player.y -= sin(v->player.angle + M_PI_2) * 4;
-	}
-	else if (v->keys_down.d && !v->keys_down.a)
-	{
-		v->player.x -= cos(v->player.angle + M_PI_2) * 4;
-		v->player.y += sin(v->player.angle + M_PI_2) * 4;
-	}
+		v->player.angle = normalize_angle(v->player.angle
+				- deg_to_rad(v->player.speed / 3));
+	if (v->keys_down.z && !v->keys_down.s && v->keys_down.q && !v->keys_down.d)
+		move(v, v->player.x + cos(normalize_angle(v->player.angle + M_PI_4))
+				* (v->player.speed / 3 * 2.5),
+				v->player.y - sin(normalize_angle(v->player.angle + M_PI_4))
+				* (v->player.speed / 3 * 2.5));
+	else if (v->keys_down.z && !v->keys_down.s
+			&& v->keys_down.d && !v->keys_down.q)
+		move(v, v->player.x + cos(normalize_angle(v->player.angle - M_PI_4))
+			* (v->player.speed / 3 * 2.5),
+				v->player.y - sin(normalize_angle(v->player.angle - M_PI_4))
+			* (v->player.speed / 3 * 2.5));
+	else if (v->keys_down.s && !v->keys_down.z
+			&& v->keys_down.q && !v->keys_down.d)
+		move(v, v->player.x - cos(normalize_angle(v->player.angle - M_PI_4))
+			* (v->player.speed / 3 * 2),
+				v->player.y + sin(normalize_angle(v->player.angle - M_PI_4))
+			* (v->player.speed / 3 * 2));
+	else if (v->keys_down.s && !v->keys_down.z
+			&& v->keys_down.d && !v->keys_down.q)
+		move(v, v->player.x - cos(normalize_angle(v->player.angle + M_PI_4))
+			* (v->player.speed / 3 * 2),
+				v->player.y + sin(normalize_angle(v->player.angle + M_PI_4))
+			* (v->player.speed / 3 * 2));
+	else if (v->keys_down.z && !v->keys_down.s)
+		move(v, v->player.x + cos(v->player.angle) * v->player.speed,
+				v->player.y - sin(v->player.angle) * v->player.speed);
+	else if (v->keys_down.s && !v->keys_down.z)
+		move(v, v->player.x - cos(v->player.angle) * (v->player.speed / 3 * 2),
+				v->player.y + sin(v->player.angle) * (v->player.speed / 3 * 2));
+	else if (v->keys_down.q && !v->keys_down.d)
+		move(v, v->player.x + cos(normalize_angle(v->player.angle + M_PI_2))
+			* (v->player.speed / 3 * 2),
+				v->player.y - sin(normalize_angle(v->player.angle + M_PI_2))
+			* (v->player.speed / 3 * 2));
+	else if (v->keys_down.d && !v->keys_down.q)
+		move(v, v->player.x - cos(normalize_angle(v->player.angle + M_PI_2))
+			* (v->player.speed / 3 * 2),
+				v->player.y + sin(normalize_angle(v->player.angle + M_PI_2))
+			* (v->player.speed / 3 * 2));
 }
 
 int		loop_hook(t_vars *v)
 {
-	mlx_clear_img(v->img, v->res.x, v->res.y);
-	move(v);
+	/* mlx_clear_img(v->img, v->res.x, v->res.y); */
+	edit(v);
 	cast_rays(v);
-	draw_minimap(v);
+	/* draw_minimap(v); */
 	mlx_put_image_to_window(v->mlx, v->win, v->img.img, 0, 0);
+	/* exit(0); */
 	return (0);
 }
 
@@ -118,9 +134,9 @@ void	initialize_keys_down(t_keys *keys_down)
 {
 	keys_down->left = 0;
 	keys_down->right = 0;
-	keys_down->w = 0;
+	keys_down->z = 0;
+	keys_down->q = 0;
 	keys_down->s = 0;
-	keys_down->a = 0;
 	keys_down->d = 0;
 }
 

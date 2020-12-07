@@ -6,14 +6,15 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 07:18:20 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/05 10:28:56 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/06 12:04:20 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "parsing.h"
 
-static void	strsadd_back(char ***strs_ptr, unsigned len, char *new, t_vars *v)
+static void		strsadd_back(char ***strs_ptr, unsigned len, char *new,
+		t_vars *v)
 {
 	char		**tmp;
 	unsigned	j;
@@ -35,22 +36,30 @@ static void	strsadd_back(char ***strs_ptr, unsigned len, char *new, t_vars *v)
 	*strs_ptr = tmp;
 }
 
-static void	addspaces(t_vars *v, char ***strs_ptr)
+static size_t	get_max_strlen(char const **strs)
+{
+	size_t		len;
+	size_t		max;
+
+	max = 0;
+	while (*strs)
+	{
+		len = ft_strlen(*strs);
+		if (len > max)
+			max = len;
+		strs++;
+	}
+	return (max);
+}
+
+static void		addspaces(t_vars *v, char const ***strs_ptr)
 {
 	size_t		len;
 	size_t		max;
 	char		*tmp;
 	unsigned	i;
 
-	max = 0;
-	i = 0;
-	while ((*strs_ptr)[i])
-	{
-		len = ft_strlen((*strs_ptr)[i]);
-		if (len > max)
-			max = len;
-		i++;
-	}
+	max = get_max_strlen(*strs_ptr);
 	i = 0;
 	while ((*strs_ptr)[i])
 	{
@@ -60,7 +69,7 @@ static void	addspaces(t_vars *v, char ***strs_ptr)
 			if (!(tmp = malloc(sizeof(char) * (max + 1))))
 				error("Malloc failed", v, ERROR);
 			ft_strcpy(tmp, (*strs_ptr)[i]);
-			free((*strs_ptr)[i]);
+			free((void *)(*strs_ptr)[i]);
 			while (len < max)
 				tmp[len++] = ' ';
 			tmp[len] = '\0';
@@ -70,15 +79,15 @@ static void	addspaces(t_vars *v, char ***strs_ptr)
 	}
 }
 
-static void	set_map_props(t_map *map)
+static void		set_map_props(t_map *map)
 {
 	map->minimap_factor = 0.2;
 	map->max.x = ft_strlen(map->grid[0]);
 	map->max.y = ft_strslen((const char **)map->grid);
 }
 
-void	parse_map(char const *const scene_path, int const fd, t_map *map,
-		t_vars *v)
+void			parse_map(char const *const scene_path, int const fd,
+		t_map *map, t_vars *v)
 {
 	int			ret;
 	char		*line;
@@ -102,6 +111,6 @@ void	parse_map(char const *const scene_path, int const fd, t_map *map,
 	}
 	if (ret == -1)
 		error(scene_path, v, PERROR);
-	addspaces(v, &map->grid);
+	addspaces(v, (char const ***)&map->grid);
 	set_map_props(map);
 }

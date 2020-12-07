@@ -13,7 +13,7 @@
 #include "parsing.h"
 #include "get_next_line.h"
 
-static void parse_res(char const *line, t_vars *v)
+static void	parse_res(char const *line, t_vars *v)
 {
 	int		screen_width;
 	int		screen_heigth;
@@ -28,22 +28,28 @@ static void parse_res(char const *line, t_vars *v)
 	if (*line || v->res.x == 0 || v->res.y == 0)
 		error("Wrong resolution infos", v, ERROR);
 	mlx_get_screen_size(v->mlx, &screen_width, &screen_heigth);
-	if (v->res.x > screen_width || v->res.y > screen_heigth)
-		error("Resolution is too big for your screen", v, ERROR);
+	if (v->res.x > screen_width)
+		v->res.x = screen_width;
+	if (v->res.y > screen_heigth)
+		v->res.y = screen_heigth;
 }
 
-static void parse_texture(char const *line, char **texture_ptr, t_vars *v)
+static void	parse_texture(char const *line, t_texture *texture, t_vars *v)
 {
-	if (*texture_ptr)
+	if (texture->width)
 		error("Multiple textures infos", v, ERROR);
 	ft_trimspaces(&line);
 	if (!*line)
 		error("Wrong textures infos", v, ERROR);
-	if (!(*texture_ptr = ft_strdup(line)))
-		error("Malloc failed", v, ERROR);
+	else if (!(texture->img.img = mlx_xpm_file_to_image(v->mlx, (char *)line,
+			&texture->width, &texture->height)))
+		error("Image creation failed", v, ERROR);
+	texture->img.addr = mlx_get_data_addr(texture->img.img,
+			&texture->img.bits_per_pixel, &texture->img.line_length,
+			&texture->img.endian);
 }
 
-static void parse_color(char const *line, t_color *color_ptr, t_vars *v)
+static void	parse_color(char const *line, t_color *color_ptr, t_vars *v)
 {
 	ft_trimspaces(&line);
 	color_ptr->bytes[3] = 0;
@@ -91,7 +97,7 @@ static void	parse_elem(char const *line, t_vars *v)
 		error("Wrong element", v, ERROR);
 }
 
-void	parse_elems(char const *const scene_path, int const fd, t_vars *v)
+void		parse_elems(char const *const scene_path, int const fd, t_vars *v)
 {
 	int		ret;
 	char	*line;

@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include <stdlib.h>
+#include "structs.h"
 
 void	free_strs(char **strs)
 {
@@ -25,13 +26,4 @@ void	free_strs(char **strs)
 		i++;
 	}
 	free(strs);
-}
-
-void		free_textures(t_textures *textures)
-{
-	free(textures->north);
-	free(textures->south);
-	free(textures->west);
-	free(textures->east);
-	free(textures->sprite);
 }

@@ -13,8 +13,11 @@
 #ifndef MINILIBX_H
 # define MINILIBX_H
 
+# include "debug.h"
+
 # include <X11/X.h>
 # include <math.h>
+
 # include "mlx.h"
 # include "structs.h"
 # include "enums.h"
@@ -27,8 +30,11 @@
 # define BLUE	0x000000FF
 
 void	error(char const *const error_msg, t_vars *v, t_error const error);
+
+void	mlx_img_pixel_put(t_img_data img_data, int x, int y, unsigned color);
 void	mlx_clear_img(t_img_data img_data, int x, int y);
+void	draw_rect(t_vars *v, int tlx, int tly, int brx, int bry, int color);
 void	draw_minimap(t_vars *v);
-void	draw_col(int col, int height, int color, t_vars *v);
+void	draw_col(int col, t_hit *hit, t_texture *texture, t_vars *v);
 
 #endif

@@ -27,3 +27,10 @@ int		is_wall(t_vars *v, int x, int y)
 		return (1);
 	return (0);
 }
+
+int		is_sprite(t_vars *v, int x, int y)
+{
+	if (v->map.grid[y >> BLOCK_SIZE_BIT][x >> BLOCK_SIZE_BIT] == 'S')
+		return (1);
+	return (0);
+}

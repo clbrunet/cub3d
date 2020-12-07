@@ -1,11 +1,11 @@
 R 1600 900
 
-NO ./path_to_the_north_texture
-SO ./path_to_the_south_texture
-WE ./path_to_the_west_texture
-EA ./path_to_the_earth_texture
+NO ./textures/jellyfish.xpm
+SO ./textures/nemo.xpm
+WE ./textures/turtle.xpm
+EA ./textures/void.xpm
 
-S ./path_to_the_sprite_texture
+S ./textures/east.xpm
 
 F 250,100,0
 C 6,5,0

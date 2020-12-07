@@ -25,47 +25,50 @@ void	get_angle_orientation(t_orientation *orientation, double const angle)
 		orientation[1] = EAST;
 }
 
-double	get_ray_distance(t_vars *v, t_dvector const *intercept,
-		double const angle)
+void	set_ray_distance(t_vars *v, t_hit *intercept, double const angle)
 {
-	double	distorted;
-	double	angle_shift;
-
-	distorted = sqrt((v->player.x - intercept->x) *(v->player.x - intercept->x)
+	intercept->distance = sqrt((v->player.x - intercept->x)
+			* (v->player.x - intercept->x)
 			+ (v->player.y - intercept->y) * (v->player.y - intercept->y));
-	angle_shift = fabs(v->player.angle - angle);
-	return (distorted * cos(angle_shift));
-}
-
-int		get_project_height(double height, t_vars *v)
-{
-	return (BLOCK_SIZE / height * v->project_dist);
+	intercept->distance *= cos(fabs(v->player.angle - angle));
 }
 
 void	cast_ray(t_vars *v, int col, double const angle)
 {
 	t_orientation	orientation[2];
-	double			hwall_dist;
-	double			vwall_dist;
+	t_hit			horiz_hit;
+	t_hit			vert_hit;
 
 	get_angle_orientation(orientation, angle);
-	hwall_dist = get_hwall_dist(v, orientation, angle);
-	vwall_dist = get_vwall_dist(v, orientation, angle);
-	if (hwall_dist < vwall_dist)
+	search_horiz_hit(&horiz_hit, v, orientation, angle);
+	search_vert_hit(&vert_hit, v, orientation, angle);
+	if (horiz_hit.distance < vert_hit.distance)
 	{
-		if (orientation[0] == NORTH)
-			draw_col(col, get_project_height(hwall_dist, v), RED, v);
+		horiz_hit.height = BLOCK_SIZE / horiz_hit.distance * v->project_dist;
+		horiz_hit.offset = (int)horiz_hit.x % BLOCK_SIZE;
+		if (orientation[0] == SOUTH)
+		{
+			horiz_hit.offset = abs(horiz_hit.offset - (BLOCK_SIZE - 1));
+			draw_col(col, &horiz_hit, &v->textures.south, v);
+		}
 		else
-			draw_col(col, get_project_height(hwall_dist, v), 0x00FFFF00, v);
+			draw_col(col, &horiz_hit, &v->textures.north, v);
 	}
 	else
 	{
+		vert_hit.height = BLOCK_SIZE / vert_hit.distance * v->project_dist;
+		vert_hit.offset = (int)vert_hit.y % BLOCK_SIZE;
 		if (orientation[1] == WEST)
-			draw_col(col, get_project_height(vwall_dist, v), GREEN, v);
+		{
+			vert_hit.offset = abs(vert_hit.offset - (BLOCK_SIZE - 1));
+			draw_col(col, &vert_hit, &v->textures.west, v);
+		}
 		else
-			draw_col(col, get_project_height(vwall_dist, v), BLUE, v);
+			draw_col(col, &vert_hit, &v->textures.east, v);
 	}
 }
+
+void	cast_ray_sprite(t_vars *v, int col, double const angle);
 
 void	cast_rays(t_vars *v)
 {
@@ -77,6 +80,14 @@ void	cast_rays(t_vars *v)
 	while (col < v->res.x)
 	{
 		cast_ray(v, col, angle);
+		angle = normalize_angle(angle - v->player.fov / v->res.x);
+		col++;
+	}
+	angle = normalize_angle(v->player.angle + v->player.fov / 2);
+	col = 0;
+	while (col < v->res.x)
+	{
+		cast_ray_sprite(v, col, angle);
 		angle = normalize_angle(angle - v->player.fov / v->res.x);
 		col++;
 	}

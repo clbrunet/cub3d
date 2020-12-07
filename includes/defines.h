@@ -14,12 +14,15 @@
 # define DEFINES_H
 
 # define BLOCK_SIZE 64
+# define BLOCK_SIZE_2 32
 # define BLOCK_SIZE_BIT 6
+
+# define OPAQUE_COLOR_MASK 0x00FFFFFF
 
 # define LEFT 65361
 # define RIGHT 65363
-# define W 119
-# define A 97
+# define Z 122
+# define Q 113
 # define S 115
 # define D 100
 # define ESC 65307

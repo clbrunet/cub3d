@@ -24,5 +24,6 @@ int		ft_atoitrim(char const **nptr);
 
 int		is_in_map(t_vars *v, int x, int y);
 int		is_wall(t_vars *v, int x, int y);
+int		is_sprite(t_vars *v, int x, int y);
 
 #endif

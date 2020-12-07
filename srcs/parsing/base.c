@@ -16,13 +16,13 @@ void	initialize_parsing(t_vars *v)
 {
 	v->res.x = 0;
 	v->res.y = 0;
-	v->textures.north = NULL;
-	v->textures.south = NULL;
-	v->textures.west = NULL;
-	v->textures.east = NULL;
-	v->textures.sprite = NULL;
-	v->colors.ceilling.full = -1;
-	v->colors.floor.full = -1;
+	v->textures.north.width = 0;
+	v->textures.south.width = 0;
+	v->textures.west.width = 0;
+	v->textures.east.width = 0;
+	v->textures.sprite.width = 0;
+	v->colors.ceilling.full = (unsigned)-1;
+	v->colors.floor.full = (unsigned)-1;
 	v->map.grid = NULL;
 }
 

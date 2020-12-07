@@ -12,7 +12,7 @@
 
 #include "raycasting.h"
 
-static void	get_hfirst_intercept(t_vars const *v, t_dvector *intercept,
+static void	get_hfirst_intercept(t_vars const *v, t_hit *intercept,
 		t_orientation const *orientation, double const angle)
 {
 	intercept->y = ((int)v->player.y >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT;
@@ -22,7 +22,8 @@ static void	get_hfirst_intercept(t_vars const *v, t_dvector *intercept,
 		/ tan(angle);
 }
 
-static void	get_hstep(t_dvector *step, t_orientation const *orientation, double const angle)
+static void	get_hstep(t_dvector *step, t_orientation const *orientation,
+		double const angle)
 {
 	step->y = BLOCK_SIZE;
 	if (orientation[0] == NORTH)
@@ -33,30 +34,32 @@ static void	get_hstep(t_dvector *step, t_orientation const *orientation, double 
 		step->x *= -1;
 }
 
-double		get_hwall_dist(t_vars *v, t_orientation const *orientation,
-		double const angle)
+void		search_horiz_hit(t_hit *intercept, t_vars *v,
+		t_orientation const *orientation, double const angle)
 {
-	t_dvector	intercept;
 	t_dvector	step;
 	char		yshift;
 
 	yshift = 0;
 	if (orientation[0] == NORTH)
 		yshift = -1;
-	get_hfirst_intercept(v, &intercept, orientation, angle);
-	if (!is_in_map(v, intercept.x, intercept.y + yshift))
-		return (999999999999999);
-	if (is_wall(v, intercept.x, intercept.y + yshift))
-		return (get_ray_distance(v, &intercept, angle));
-	get_hstep(&step, orientation, angle);
-	intercept.x += step.x;
-	intercept.y += step.y;
-	while (is_in_map(v, intercept.x, intercept.y + yshift))
+	get_hfirst_intercept(v, intercept, orientation, angle);
+	if (!is_in_map(v, intercept->x, intercept->y + yshift))
 	{
-		if (is_wall(v, intercept.x, intercept.y + yshift))
-			return (get_ray_distance(v, &intercept, angle));
-		intercept.x += step.x;
-		intercept.y += step.y;
+		intercept->distance = 999999999999999;
+		return ;
 	}
-	return (999999999999999);
+	if (is_wall(v, intercept->x, intercept->y + yshift))
+		return (set_ray_distance(v, intercept, angle));
+	get_hstep(&step, orientation, angle);
+	intercept->x += step.x;
+	intercept->y += step.y;
+	while (is_in_map(v, intercept->x, intercept->y + yshift))
+	{
+		if (is_wall(v, intercept->x, intercept->y + yshift))
+			return (set_ray_distance(v, intercept, angle));
+		intercept->x += step.x;
+		intercept->y += step.y;
+	}
+	intercept->distance = 999999999999999;
 }

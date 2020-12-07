@@ -12,30 +12,11 @@
 
 #include "parsing.h"
 
-void	check_map(t_vars *v, int y, int x)
-{
-	if (y - 1 < 0 || !v->map.grid[y + 1] || x - 1 < 0 || !v->map.grid[y][x + 1]
-			|| v->map.grid[y + 1][x] == ' ' || v->map.grid[y - 1][x] == ' '
-			|| v->map.grid[y][x + 1] == ' ' || v->map.grid[y][x - 1] == ' ')
-		error("Map not properly closed", v, ERROR);
-	if (v->map.grid[y][x] == '2')
-		v->map.grid[y][x] = 'S';
-	else
-		v->map.grid[y][x] = 'E';
-	if (v->map.grid[y + 1][x] == '0' || v->map.grid[y + 1][x] == '2')
-		check_map(v, y + 1, x);
-	if (v->map.grid[y - 1][x] == '0' || v->map.grid[y - 1][x] == '2')
-		check_map(v, y - 1, x);
-	if (v->map.grid[y][x + 1] == '0' || v->map.grid[y][x + 1] == '2')
-		check_map(v, y, x + 1);
-	if (v->map.grid[y][x - 1] == '0' || v->map.grid[y][x - 1] == '2')
-		check_map(v, y, x - 1);
-}
-
 static void	set_player_props(t_vars *v, char c, int y, int x)
 {
 	v->player.fov = M_PI / 3;
 	v->player.height = BLOCK_SIZE / 2;
+	v->player.speed = (double)v->res.x / 175;
 	v->player.x = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * x;
 	v->player.y = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * y;
 	if (c == 'N')
@@ -48,7 +29,7 @@ static void	set_player_props(t_vars *v, char c, int y, int x)
 		v->player.angle = 0;
 }
 
-void	check_map_chars(t_vars *v)
+void		check_map_chars(t_vars *v)
 {
 	int		i;
 	int		j;
@@ -74,4 +55,24 @@ void	check_map_chars(t_vars *v)
 		error("Player missing", v, ERROR);
 	else if (count > 1)
 		error("Multiplayer is not yet available", v, ERROR);
+}
+
+void		check_map(t_vars *v, int y, int x)
+{
+	if (y - 1 < 0 || !v->map.grid[y + 1] || x - 1 < 0 || !v->map.grid[y][x + 1]
+			|| v->map.grid[y + 1][x] == ' ' || v->map.grid[y - 1][x] == ' '
+			|| v->map.grid[y][x + 1] == ' ' || v->map.grid[y][x - 1] == ' ')
+		error("Map not properly closed", v, ERROR);
+	if (v->map.grid[y][x] == '2')
+		v->map.grid[y][x] = 'S';
+	else
+		v->map.grid[y][x] = 'E';
+	if (v->map.grid[y + 1][x] == '0' || v->map.grid[y + 1][x] == '2')
+		check_map(v, y + 1, x);
+	if (v->map.grid[y - 1][x] == '0' || v->map.grid[y - 1][x] == '2')
+		check_map(v, y - 1, x);
+	if (v->map.grid[y][x + 1] == '0' || v->map.grid[y][x + 1] == '2')
+		check_map(v, y, x + 1);
+	if (v->map.grid[y][x - 1] == '0' || v->map.grid[y][x - 1] == '2')
+		check_map(v, y, x - 1);
 }

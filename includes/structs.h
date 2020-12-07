@@ -25,18 +25,33 @@ typedef struct	s_ivector
 	int		y;
 }				t_ivector;
 
+typedef struct	s_img_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_img_data;
+
+typedef struct	s_texture
+{
+	t_img_data	img;
+	int			width;
+	int			height;
+}				t_texture;
+
 typedef struct	s_textures
 {
-	char	*north;
-	char	*south;
-	char	*west;
-	char	*east;
-	char	*sprite;
+	t_texture	north;
+	t_texture	south;
+	t_texture	west;
+	t_texture	east;
+	t_texture	sprite;
 }				t_textures;
 
 typedef union	u_color
 {
-	int				full;
+	unsigned		full;
 	unsigned char	bytes[4];
 }				t_color;
 
@@ -52,6 +67,7 @@ typedef struct	s_player
 	double		y;
 	double		angle;
 	double		fov;
+	double		speed;
 	int			height;
 }				t_player;
 
@@ -62,23 +78,24 @@ typedef struct	s_map
 	t_ivector	max;
 }				t_map;
 
-typedef struct	s_img_data {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}				t_img_data;
-
 typedef struct	s_keys
 {
-	char	w;
-	char	a;
+	char	z;
+	char	q;
 	char	s;
 	char	d;
 	char	left;
 	char	right;
 }				t_keys;
+
+typedef struct	s_hit
+{
+	double	x;
+	double	y;
+	double	distance;
+	int		height;
+	int		offset;
+}				t_hit;
 
 typedef struct	s_vars
 {

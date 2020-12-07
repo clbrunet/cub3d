@@ -16,9 +16,9 @@ SRCS		=	srcs/main.c		\
 				srcs/minilibx/base.c	\
 				srcs/minilibx/draw.c	\
 				srcs/raycasting/base.c				\
-				srcs/raycasting/utils.c				\
-				srcs/raycasting/horizontal_dist.c	\
-				srcs/raycasting/vertical_dist.c		\
+				srcs/raycasting/horizontal_hit.c	\
+				srcs/raycasting/vertical_hit.c		\
+				srcs/raycasting/sprite.c
 
 OBJS		=	$(SRCS:.c=.o)
 

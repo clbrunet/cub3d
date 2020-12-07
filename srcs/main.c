@@ -11,14 +11,13 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include "free.h"
 #include "parsing.h"
 
-void	error(char const *const error_msg, t_vars *v, t_error const error)
+void		error(char const *const error_msg, t_vars *v, t_error const error)
 {
 	free(v->mlx);
-	free_textures(&v->textures);
-	free_strs(v->map.grid);
+	/* free_textures(&v->textures); */
+	/* free_strs(v->map.grid); */
 	ft_putendl_fd("Error", 2);
 	if (error == PERROR)
 		perror(error_msg);
@@ -26,7 +25,6 @@ void	error(char const *const error_msg, t_vars *v, t_error const error)
 		ft_putendl_fd(error_msg, 2);
 	exit(1);
 }
-
 
 static void	check_av(char const *scene_path, char const *save_flag, t_vars *v)
 {
@@ -54,12 +52,10 @@ static void	game(char const *const scene_path)
 	parse_scene(scene_path, &v);
 	initialize_mlx(&v);
 	mlx_loop(v.mlx);
-	free_textures(&v.textures);
-	free_strs(v.map.grid);
-	mlx_destroy_window(v.mlx, v.win);
-	mlx_destroy_image(v.mlx, v.img.img);
-	free(v.mlx);
-
+	/* free_strs(v.map.grid); */
+	/* mlx_destroy_window(v.mlx, v.win); */
+	/* mlx_destroy_image(v.mlx, v.img.img); */
+	/* free(v.mlx); */
 }
 
 static void	save(char const *const scene_path, char const *const save_flag)
@@ -71,11 +67,10 @@ static void	save(char const *const scene_path, char const *const save_flag)
 	check_av(scene_path, save_flag, &v);
 	parse_scene(scene_path, &v);
 	initialize_mlx(&v);
-	free_textures(&v.textures);
-	free_strs(v.map.grid);
+	/* free_strs(v.map.grid); */
 }
 
-int		main(int ac, char **av)
+int			main(int ac, char **av)
 {
 	if (ac == 2)
 		game(av[1]);
