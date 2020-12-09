@@ -38,10 +38,15 @@ typedef enum	e_orientation
 
 void	get_angle_orientation(t_orientation *orientation, double const angle);
 void	set_ray_distance(t_vars *v, t_hit *intercept, double const angle);
+void	set_sprite_distance(t_vars *v, t_hit *intercept, double const angle);
 
 void		search_horiz_hit(t_hit *intercept, t_vars *v,
 		t_orientation const *orientation, double const angle);
+void		search_horiz_sprite(t_hit *intercept, t_vars *v,
+		t_orientation const *orientation, double const angle);
 void		search_vert_hit(t_hit *intercept, t_vars *v,
+		t_orientation const *orientation, double const angle);
+void		search_vert_sprite(t_hit *intercept, t_vars *v,
 		t_orientation const *orientation, double const angle);
 
 void			cast_rays(t_vars *v);

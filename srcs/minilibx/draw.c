@@ -57,7 +57,11 @@ void	draw_rect(t_vars *v, int tlx, int tly, int brx, int bry, int color)
 	{
 		tlx = bp;
 		while (tlx <= brx)
-			mlx_img_pixel_put(v->img, tlx++, tly, color);
+		{
+			if (tly > 0)
+				mlx_img_pixel_put(v->img, tlx, tly, color);
+			tlx++;
+		}
 		tly++;
 	}
 }
@@ -77,8 +81,15 @@ void	draw_minimap(t_vars *v)
 					[(int)((double)i / v->map.minimap_factor) >> BLOCK_SIZE_BIT]
 					[(int)(j / v->map.minimap_factor) >> BLOCK_SIZE_BIT] == '1')
 				mlx_img_pixel_put(v->img, j, i, WHITE);
-			else
+			else if (v->map.grid
+					[(int)((double)i / v->map.minimap_factor) >> BLOCK_SIZE_BIT]
+					[(int)(j / v->map.minimap_factor) >> BLOCK_SIZE_BIT] == 'S')
+				mlx_img_pixel_put(v->img, j, i, BLUE);
+			else if (j % (int)round(64 * v->map.minimap_factor) && i % (int)round(64
+						*v->map.minimap_factor))
 				mlx_img_pixel_put(v->img, j, i, 0x00ffb74d);
+			else
+				mlx_img_pixel_put(v->img, j, i, 0);
 
 			j++;
 		}
@@ -90,28 +101,37 @@ void	draw_minimap(t_vars *v)
 			v->player.y * v->map.minimap_factor + 2, GREEN);
 	double newx = v->player.x + cos(v->player.angle) * 10;
 	double newy = v->player.y - sin(v->player.angle) * 10;
-	draw_rect(v, newx * v->map.minimap_factor - 1,
-			newy * v->map.minimap_factor - 1,
-			newx * v->map.minimap_factor + 1,
-			newy * v->map.minimap_factor + 1, GREEN);
-	newx = newx + cos(v->player.angle) * 10;
-	newy = newy - sin(v->player.angle) * 10;
-	draw_rect(v, newx * v->map.minimap_factor - 1,
-			newy * v->map.minimap_factor - 1,
-			newx * v->map.minimap_factor + 1,
-			newy * v->map.minimap_factor + 1, GREEN);
-	newx = newx + cos(v->player.angle) * 10;
-	newy = newy - sin(v->player.angle) * 10;
-	draw_rect(v, newx * v->map.minimap_factor - 1,
-			newy * v->map.minimap_factor - 1,
-			newx * v->map.minimap_factor + 1,
-			newy * v->map.minimap_factor + 1, GREEN);
-	newx = newx + cos(v->player.angle) * 10;
-	newy = newy - sin(v->player.angle) * 10;
-	draw_rect(v, newx * v->map.minimap_factor - 1,
-			newy * v->map.minimap_factor - 1,
-			newx * v->map.minimap_factor + 1,
-			newy * v->map.minimap_factor + 1, GREEN);
+	for (int c = 0; c < 100; c++)
+	{
+		draw_rect(v, newx * v->map.minimap_factor - 1,
+				newy * v->map.minimap_factor - 1,
+				newx * v->map.minimap_factor + 1,
+				newy * v->map.minimap_factor + 1, GREEN);
+		newx = newx + cos(v->player.angle) * 10;
+		newy = newy - sin(v->player.angle) * 10;
+	}
+	newx = v->player.x + cos(v->player.angle + deg_to_rad(30)) * 10;
+	newy = v->player.y - sin(v->player.angle + deg_to_rad(30)) * 10;
+	for (int c = 0; c < 100; c++)
+	{
+		draw_rect(v, newx * v->map.minimap_factor - 1,
+				newy * v->map.minimap_factor - 1,
+				newx * v->map.minimap_factor + 1,
+				newy * v->map.minimap_factor + 1, GREEN);
+		newx = newx + cos(v->player.angle + deg_to_rad(30)) * 10;
+		newy = newy - sin(v->player.angle + deg_to_rad(30)) * 10;
+	}
+	newx = v->player.x + cos(v->player.angle - deg_to_rad(30)) * 10;
+	newy = v->player.y - sin(v->player.angle - deg_to_rad(30)) * 10;
+	for (int c = 0; c < 100; c++)
+	{
+		draw_rect(v, newx * v->map.minimap_factor - 1,
+				newy * v->map.minimap_factor - 1,
+				newx * v->map.minimap_factor + 1,
+				newy * v->map.minimap_factor + 1, GREEN);
+		newx = newx + cos(v->player.angle - deg_to_rad(30)) * 10;
+		newy = newy - sin(v->player.angle - deg_to_rad(30)) * 10;
+	}
 }
 
 void	draw_col(int col, t_hit *hit, t_texture *texture, t_vars *v)
@@ -125,10 +145,14 @@ void	draw_col(int col, t_hit *hit, t_texture *texture, t_vars *v)
 		y = 0;
 		while (y < v->res.y)
 		{
-			mlx_img_pixel_put(v->img, col, y,
-					mlx_img_pixel_get_value(texture->img, texture_col,
-						(y + (hit->height - v->res.y) / 2)
-						* texture->height / hit->height));
+			/* mlx_img_pixel_put(v->img, col, y, */
+			/* 		mlx_img_pixel_get_value(texture->img, texture_col, */
+			/* 			(y + (hit->height - v->res.y) / 2) */
+			/* 			* texture->height / hit->height)); */
+			unsigned color = mlx_img_pixel_get_value(texture->img, texture_col,
+					(y + (hit->height - v->res.y) / 2) * texture->height / hit->height);
+			if (color <= OPAQUE_COLOR_MASK)
+				mlx_img_pixel_put(v->img, col, y, color);
 			y++;
 		}
 		return ;
@@ -144,8 +168,9 @@ void	draw_col(int col, t_hit *hit, t_texture *texture, t_vars *v)
 	{
 		unsigned color = mlx_img_pixel_get_value(texture->img, texture_col,
 				y * texture->height / hit->height);
-		mlx_img_pixel_put(v->img, col, y + (v->res.y / 2 - hit->height / 2),
-				color);
+		if (color <= OPAQUE_COLOR_MASK)
+			mlx_img_pixel_put(v->img, col, y + (v->res.y / 2 - hit->height / 2),
+					color);
 		y++;
 	}
 	while (y + (v->res.y / 2 - hit->height / 2) < v->res.y)

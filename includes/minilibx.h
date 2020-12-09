@@ -22,6 +22,7 @@
 # include "structs.h"
 # include "enums.h"
 # include "defines.h"
+# include "utils.h"
 
 # define BLACK	0x00000000
 # define WHITE	0x00FFFFFF

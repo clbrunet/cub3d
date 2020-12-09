@@ -8,6 +8,7 @@ SRCS		=	srcs/main.c		\
 				srcs/utils/ft_atoitrim.c	\
 				srcs/utils/angles.c			\
 				srcs/utils/map.c			\
+				srcs/utils/lines.c			\
 				srcs/parsing/base.c			\
 				srcs/parsing/elems.c		\
 				srcs/parsing/check_elems.c	\

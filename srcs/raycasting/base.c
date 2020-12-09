@@ -33,6 +33,15 @@ void	set_ray_distance(t_vars *v, t_hit *intercept, double const angle)
 	intercept->distance *= cos(fabs(v->player.angle - angle));
 }
 
+void	set_sprite_distance(t_vars *v, t_hit *intercept, double const angle)
+{
+	intercept->distance = sqrt((v->player.x - intercept->x)
+			* (v->player.x - intercept->x)
+			+ (v->player.y - intercept->y) * (v->player.y - intercept->y));
+	intercept->distance *= cos(fabs(v->player.angle - angle));
+	/* (void)angle; */
+}
+
 void	cast_ray(t_vars *v, int col, double const angle)
 {
 	t_orientation	orientation[2];
@@ -53,6 +62,14 @@ void	cast_ray(t_vars *v, int col, double const angle)
 		}
 		else
 			draw_col(col, &horiz_hit, &v->textures.north, v);
+		search_vert_sprite(&vert_hit, v, orientation, angle);
+		vert_hit.height = BLOCK_SIZE / vert_hit.distance * v->project_dist;
+		if (vert_hit.distance < horiz_hit.distance)
+			draw_col(col, &vert_hit, &v->textures.sprite, v);
+		search_horiz_sprite(&horiz_hit, v, orientation, angle);
+		horiz_hit.height = BLOCK_SIZE / horiz_hit.distance * v->project_dist;
+		if (horiz_hit.distance < 999999999999)
+			draw_col(col, &horiz_hit, &v->textures.sprite, v);
 	}
 	else
 	{
@@ -65,10 +82,16 @@ void	cast_ray(t_vars *v, int col, double const angle)
 		}
 		else
 			draw_col(col, &vert_hit, &v->textures.east, v);
+		search_horiz_sprite(&horiz_hit, v, orientation, angle);
+		horiz_hit.height = BLOCK_SIZE / horiz_hit.distance * v->project_dist;
+		if (horiz_hit.distance < vert_hit.distance)
+			draw_col(col, &horiz_hit, &v->textures.sprite, v);
+		search_vert_sprite(&vert_hit, v, orientation, angle);
+		vert_hit.height = BLOCK_SIZE / vert_hit.distance * v->project_dist;
+		if (vert_hit.distance < 999999999999)
+			draw_col(col, &vert_hit, &v->textures.sprite, v);
 	}
 }
-
-void	cast_ray_sprite(t_vars *v, int col, double const angle);
 
 void	cast_rays(t_vars *v)
 {
@@ -80,14 +103,6 @@ void	cast_rays(t_vars *v)
 	while (col < v->res.x)
 	{
 		cast_ray(v, col, angle);
-		angle = normalize_angle(angle - v->player.fov / v->res.x);
-		col++;
-	}
-	angle = normalize_angle(v->player.angle + v->player.fov / 2);
-	col = 0;
-	while (col < v->res.x)
-	{
-		cast_ray_sprite(v, col, angle);
 		angle = normalize_angle(angle - v->player.fov / v->res.x);
 		col++;
 	}

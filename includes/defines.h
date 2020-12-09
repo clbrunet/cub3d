@@ -26,5 +26,6 @@
 # define S 115
 # define D 100
 # define ESC 65307
+# define SHIFT 65505
 
 #endif

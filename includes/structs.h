@@ -80,12 +80,13 @@ typedef struct	s_map
 
 typedef struct	s_keys
 {
+	char	left;
+	char	right;
 	char	z;
 	char	q;
 	char	s;
 	char	d;
-	char	left;
-	char	right;
+	char	shift;
 }				t_keys;
 
 typedef struct	s_hit

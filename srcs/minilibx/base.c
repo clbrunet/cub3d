@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 11:02:01 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/05 17:51:53 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/08 14:50:18 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,12 @@ int		keypress_hook(int keycode, t_vars *v)
 		v->keys_down.q = 1;
 	else if (keycode == D)
 		v->keys_down.d = 1;
+	else if (keycode == SHIFT)
+	{
+		if (!v->keys_down.shift)
+			v->player.speed *= 2;
+		v->keys_down.shift = 1;
+	}
 	/* print_keys(&v->keys_down); */
 	return (1);
 }
@@ -48,6 +54,11 @@ int		keyrelease_hook(int keycode, t_vars *v)
 		v->keys_down.s = 0;
 	else if (keycode == D)
 		v->keys_down.d = 0;
+	else if (keycode == SHIFT)
+	{
+		v->player.speed /= 2;
+		v->keys_down.shift = 0;
+	}
 	return (1);
 }
 
@@ -56,16 +67,16 @@ void	move(t_vars *v, double x, double y)
 	if ((M_PI_4 < v->player.angle && v->player.angle < M_PI - M_PI_4)
 			|| (M_PI + M_PI_4 < v->player.angle && v->player.angle < 7 * M_PI_4))
 	{
-		if (!is_wall(v, v->player.x, y))
+		if (!is_wall(v, v->player.x, y) && !is_sprite(v, v->player.x, y))
 			v->player.y = y;
-		if (!is_wall(v, x, v->player.y))
+		if (!is_wall(v, x, v->player.y) && !is_sprite(v, x, v->player.y))
 			v->player.x = x;
 	}
 	else
 	{
-		if (!is_wall(v, x, v->player.y))
+		if (!is_wall(v, x, v->player.y) && !is_sprite(v, x, v->player.y))
 			v->player.x = x;
-		if (!is_wall(v, v->player.x, y))
+		if (!is_wall(v, v->player.x, y) && !is_sprite(v, v->player.x, y))
 			v->player.y = y;
 	}
 }

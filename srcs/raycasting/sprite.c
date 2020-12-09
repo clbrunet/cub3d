@@ -12,22 +12,19 @@
 
 #include "raycasting.h"
 #include "minilibx.h"
+int colu;
 
 void	draw_sprite(t_hit *hit, t_vars *v, int col)
 {
 	int		y;
-	int		x;
 	/* int		texture_col; */
-
 	/* texture_col = (double)hit->offset / ((double)BLOCK_SIZE / texture->width); */
 	if (hit->height > v->res.y)
 	{
 		y = 0;
 		while (y < v->res.y)
 		{
-			x = col;
-			while (x < hit->height + col && x < v->res.x)
-				mlx_img_pixel_put(v->img, x++, y, BLACK);
+			mlx_img_pixel_put(v->img, col, y, BLACK);
 			y++;
 		}
 		return ;
@@ -35,25 +32,18 @@ void	draw_sprite(t_hit *hit, t_vars *v, int col)
 	y = 0;
 	while (y < hit->height)
 	{
-		x = 0;
-		while (x < hit->height && x + col < v->res.x)
-		{
-			mlx_img_pixel_put(v->img, x + col, y + (v->res.y / 2 - hit->height / 2),
-					BLACK);
-			x++;
-		}
+		mlx_img_pixel_put(v->img, col, y + (v->res.y / 2 - hit->height / 2),
+				BLACK);
 		y++;
 	}
 }
-
-static void	get_hfirst_intercept(t_vars const *v, t_hit *intercept,
-		t_orientation const *orientation, double const angle)
+void	set_sprite_distancet(t_vars *v, t_hit *intercept, double const angle)
 {
-	intercept->y = ((int)v->player.y >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT;
-	if (orientation[0] == SOUTH)
-		intercept->y += BLOCK_SIZE;
-	intercept->x = v->player.x + (v->player.y - intercept->y)
-		/ tan(angle);
+	intercept->distance = sqrt((v->player.x - intercept->x)
+			* (v->player.x - intercept->x)
+			+ (v->player.y - intercept->y) * (v->player.y - intercept->y));
+	/* intercept->distance *= cos(fabs(v->player.angle - angle)); */
+	(void)angle;
 }
 
 static void	get_hstep(t_dvector *step, t_orientation const *orientation,
@@ -68,65 +58,66 @@ static void	get_hstep(t_dvector *step, t_orientation const *orientation,
 		step->x *= -1;
 }
 
-void		search_horiz_sprite(t_hit *intercept, t_vars *v,
+void		search_horiz_spritet(t_hit *intercept, t_vars *v,
 		t_orientation const *orientation, double const angle)
 {
 	t_dvector	step;
+	/* t_hit	bp; */
 	char		yshift;
 
+	/* bp = *intercept; */
 	yshift = 0;
-	if (orientation[0] == NORTH)
+	if (orientation[0] == SOUTH)
 		yshift = -1;
-	get_hfirst_intercept(v, intercept, orientation, angle);
-	if (!is_in_map(v, intercept->x, intercept->y + yshift))
-	{
-		intercept->distance = 999999999999999;
+	intercept->distance = 999999999999999;
+	if ((orientation[0] == NORTH && intercept->y > v->player.y)
+			|| (orientation[0] == SOUTH && intercept->y < v->player.y)
+			|| !is_in_map(v, intercept->x, intercept->y + yshift))
 		return ;
-	}
 	if (is_sprite(v, intercept->x, intercept->y + yshift))
 	{
-		intercept->y = (((int)intercept->y + yshift) >> BLOCK_SIZE_BIT)
-			<< BLOCK_SIZE_BIT;
-		/* if (orientation[0] == SOUTH) */
-		/* 	intercept->y += BLOCK_SIZE; */
-		intercept->y += BLOCK_SIZE_2;
-		intercept->x = ((int)intercept->x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT;
-		intercept->x += BLOCK_SIZE_2;
-		/* if (orientation[0] == ) */
-		/* 	intercept->x += BLOCK_SIZE; */
-		return (set_ray_distance(v, intercept, angle));
+		t_dvector center;
+		/* t_dvector t[2]; */
+		center.x = (((int)intercept->x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+		center.y = ((((int)intercept->y + yshift) >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+		/* t[0].x = center.x + cos(normalize_angle(v->player.angle + M_PI_2)) * 32; */
+		/* t[0].y = center.y - sin(normalize_angle(v->player.angle + M_PI_2)) * 32; */
+		/* t[1].x = center.x + cos(normalize_angle(v->player.angle - M_PI_2)) * 32; */
+		/* t[1].y = center.y - sin(normalize_angle(v->player.angle - M_PI_2)) * 32; */
+		/* int dist = round(sqrt((t[0].x - t[1].x) * (t[0].x - t[1].x) */
+		/* 			+ (t[0].y - t[1].y) * (t[0].y - t[1].y))); */
+		intercept->x = center.x;
+		intercept->y = center.y;
+		return (set_sprite_distancet(v, intercept, angle));
 	}
 	get_hstep(&step, orientation, angle);
+	step.x = -step.x;
+	step.y = -step.y;
 	intercept->x += step.x;
 	intercept->y += step.y;
-	while (is_in_map(v, intercept->x, intercept->y + yshift))
+	while (!((orientation[0] == NORTH && intercept->y > v->player.y)
+				|| (orientation[0] == SOUTH && intercept->y < v->player.y)
+				|| !is_in_map(v, intercept->x, intercept->y + yshift)))
 	{
 		if (is_sprite(v, intercept->x, intercept->y + yshift))
 		{
-			intercept->y = (((int)intercept->y + yshift) >> BLOCK_SIZE_BIT)
-				<< BLOCK_SIZE_BIT;
-			/* if (orientation[0] == SOUTH) */
-			/* 	intercept->y += BLOCK_SIZE; */
-			intercept->y += BLOCK_SIZE_2;
-			intercept->x = ((int)intercept->x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT;
-			intercept->x += BLOCK_SIZE_2;
-			/* if (orientation[0] == ) */
-			/* 	intercept->x += BLOCK_SIZE; */
-			return (set_ray_distance(v, intercept, angle));
+			t_dvector center;
+			/* t_dvector t[2]; */
+			center.x = (((int)intercept->x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+			center.y = ((((int)intercept->y + yshift) >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+			/* t[0].x = center.x + cos(normalize_angle(v->player.angle + M_PI_2)) * 32; */
+			/* t[0].y = center.y - sin(normalize_angle(v->player.angle + M_PI_2)) * 32; */
+			/* t[1].x = center.x + cos(normalize_angle(v->player.angle - M_PI_2)) * 32; */
+			/* t[1].y = center.y - sin(normalize_angle(v->player.angle - M_PI_2)) * 32; */
+			/* int dist = round(sqrt((t[0].x - t[1].x) * (t[0].x - t[1].x) */
+			/* 			+ (t[0].y - t[1].y) * (t[0].y - t[1].y))); */
+			intercept->x = center.x;
+			intercept->y = center.y;
+			return (set_sprite_distancet(v, intercept, angle));
 		}
 		intercept->x += step.x;
 		intercept->y += step.y;
 	}
-	intercept->distance = 999999999999999;
-}
-
-static void	get_vfirst_intercept(t_vars const *v, t_hit *intercept,
-		t_orientation const *orientation, double const angle)
-{
-	intercept->x = ((int)v->player.x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT;
-	if (orientation[1] == EAST)
-		intercept->x += BLOCK_SIZE;
-	intercept->y = v->player.y + (v->player.x - intercept->x) * tan(angle);
 }
 
 static void	get_vstep(t_dvector *step, t_orientation const *orientation,
@@ -141,88 +132,206 @@ static void	get_vstep(t_dvector *step, t_orientation const *orientation,
 		step->y *= -1;
 }
 
-void		search_vert_sprite(t_hit *intercept, t_vars *v,
+void		search_vert_spritet(t_hit *intercept, t_vars *v,
 		t_orientation const *orientation, double const angle)
 {
 	t_dvector	step;
 	char		xshift;
 
 	xshift = 0;
-	if (orientation[1] == WEST)
+	if (orientation[1] == EAST)
 		xshift = -1;
-	get_vfirst_intercept(v, intercept, orientation, angle);
-	if (!is_in_map(v, intercept->x + xshift, intercept->y))
-	{
-		intercept->distance = 999999999999999;
+	intercept->distance = 999999999999999;
+	if ((orientation[1] == EAST && intercept->x < v->player.x)
+			|| (orientation[1] == WEST && intercept->x > v->player.x)
+			|| !is_in_map(v, intercept->x + xshift, intercept->y))
 		return ;
-	}
-	else if (is_sprite(v, intercept->x + xshift, intercept->y))
+	if (is_sprite(v, intercept->x + xshift, intercept->y))
 	{
-		intercept->y = ((int)intercept->y >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT;
-		intercept->y += BLOCK_SIZE_2;
-		intercept->x = (((int)intercept->x + xshift) >> BLOCK_SIZE_BIT)
-			<< BLOCK_SIZE_BIT;
-		intercept->x += BLOCK_SIZE_2;
-		return (set_ray_distance(v, intercept, angle));
+		t_dvector center;
+		/* t_dvector t[2]; */
+		center.x = ((((int)intercept->x + xshift) >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+		center.y = (((int)intercept->y >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+		/* t[0].x = center.x + cos(normalize_angle(v->player.angle + M_PI_2)) * 32; */
+		/* t[0].y = center.y - sin(normalize_angle(v->player.angle + M_PI_2)) * 32; */
+		/* t[1].x = center.x + cos(normalize_angle(v->player.angle - M_PI_2)) * 32; */
+		/* t[1].y = center.y - sin(normalize_angle(v->player.angle - M_PI_2)) * 32; */
+		/* int dist = round(sqrt((t[0].x - t[1].x) * (t[0].x - t[1].x) */
+		/* 			+ (t[0].y - t[1].y) * (t[0].y - t[1].y))); */
+		intercept->x = center.x;
+		intercept->y = center.y;
+		return (set_sprite_distancet(v, intercept, angle));
 	}
 	get_vstep(&step, orientation, angle);
+	step.x = -step.x;
+	step.y = -step.y;
 	intercept->x += step.x;
 	intercept->y += step.y;
-	while (is_in_map(v, intercept->x + xshift, intercept->y))
+	while (!((orientation[1] == EAST && intercept->x < v->player.x)
+			|| (orientation[1] == WEST && intercept->x > v->player.x)
+			|| !is_in_map(v, intercept->x + xshift, intercept->y)))
 	{
 		if (is_sprite(v, intercept->x + xshift, intercept->y))
 		{
-			intercept->y = ((int)intercept->y >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT;
-			intercept->y += BLOCK_SIZE_2;
-			intercept->x = (((int)intercept->x + xshift) >> BLOCK_SIZE_BIT)
-				<< BLOCK_SIZE_BIT;
-			intercept->x += BLOCK_SIZE_2;
-			return (set_ray_distance(v, intercept, angle));
+			t_dvector center;
+			/* t_dvector t[2]; */
+			center.x = ((((int)intercept->x + xshift) >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+			center.y = (((int)intercept->y >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+			/* t[0].x = center.x + cos(normalize_angle(v->player.angle + M_PI_2)) * 32; */
+			/* t[0].y = center.y - sin(normalize_angle(v->player.angle + M_PI_2)) * 32; */
+			/* t[1].x = center.x + cos(normalize_angle(v->player.angle - M_PI_2)) * 32; */
+			/* t[1].y = center.y - sin(normalize_angle(v->player.angle - M_PI_2)) * 32; */
+			/* int dist = round(sqrt((t[0].x - t[1].x) * (t[0].x - t[1].x) */
+			/* 			+ (t[0].y - t[1].y) * (t[0].y - t[1].y))); */
+			intercept->x = center.x;
+			intercept->y = center.y;
+			return (set_sprite_distancet(v, intercept, angle));
 		}
 		intercept->x += step.x;
 		intercept->y += step.y;
 	}
-	intercept->distance = 999999999999999;
 }
 
 void	cast_ray_sprite(t_vars *v, int col, double const angle)
 {
 	t_orientation	orientation[2];
-	t_hit			horiz_hit;
-	t_hit			vert_hit;
-	static t_ivector ve = {0};
-	static t_ivector h = {0};
+	t_hit			vert;
+	t_hit			horiz;
+	/* t_hit			sprite; */
 
-	if (col == 0)
-	{
-		ve.x = 0;
-		ve.y = 0;
-		h.x = 0;
-		h.y = 0;
-	}
+	colu = col;
 	get_angle_orientation(orientation, angle);
-	search_horiz_sprite(&horiz_hit, v, orientation, angle);
-	horiz_hit.height = BLOCK_SIZE / horiz_hit.distance * v->project_dist;
-	search_vert_sprite(&vert_hit, v, orientation, angle);
-	vert_hit.height = BLOCK_SIZE / vert_hit.distance * v->project_dist;
-	if (horiz_hit.distance < 1000
-			&& !(ve.x == (int)horiz_hit.x >> BLOCK_SIZE_BIT
-				&& ve.y == ((int)horiz_hit.y - 1) >> BLOCK_SIZE_BIT)
-			&& !(h.x == (int)horiz_hit.x >> BLOCK_SIZE_BIT
-				&& h.y == ((int)horiz_hit.y - 1) >> BLOCK_SIZE_BIT))
+	search_horiz_hit(&horiz, v, orientation, angle);
+	if (horiz.distance < 999999999999)
 	{
-		h.x = (int)horiz_hit.x >> BLOCK_SIZE_BIT;
-		h.y = ((int)horiz_hit.y - 1) >> BLOCK_SIZE_BIT;
-		draw_sprite(&horiz_hit, v, col);
+		search_horiz_spritet(&horiz, v, orientation, angle);
+		horiz.height = BLOCK_SIZE / horiz.distance * v->project_dist;
+		if (horiz.distance < 999999999999)
+			draw_sprite(&horiz, v, col);
 	}
-	else if (vert_hit.distance < 1000
-			&& !(ve.x == (int)vert_hit.x >> BLOCK_SIZE_BIT
-				&& ve.y == ((int)vert_hit.y - 1) >> BLOCK_SIZE_BIT)
-			&& !(h.x == (int)vert_hit.x >> BLOCK_SIZE_BIT
-				&& h.y == ((int)vert_hit.y - 1) >> BLOCK_SIZE_BIT))
+	search_vert_hit(&vert, v, orientation, angle);
+	/* if (sprite.distance * cos(fabs(v->player.angle - angle)) < horiz.distance */
+	/* 		&& sprite.distance * cos(fabs(v->player.angle - angle)) < vwall.distance) */
+	if (vert.distance < 999999999999)
 	{
-		ve.x = (int)vert_hit.x >> BLOCK_SIZE_BIT;
-		ve.y = ((int)vert_hit.y - 1) >> BLOCK_SIZE_BIT;
-		draw_sprite(&vert_hit, v, col);
+		search_vert_spritet(&vert, v, orientation, angle);
+		vert.height = BLOCK_SIZE / vert.distance * v->project_dist;
+		if (vert.distance < 999999999999)
+			draw_sprite(&vert, v, col);
 	}
+	/* if (sprite.distance * cos(fabs(v->player.angle - angle)) < horiz.distance */
+	/* 		&& sprite.distance * cos(fabs(v->player.angle - angle)) < vwall.distance) */
+	/* 	draw_sprite(&sprite, v, col); */
 }
+
+/* void	search_sprite(t_hit *intercept, t_vars *v, */
+/* 		t_orientation const *orientation, double const angle) */
+/* { */
+/* 	t_hit hh; */
+/* 	t_hit vv; */
+/* 	t_dvector hs; */
+/* 	t_dvector vs; */
+
+/* 	char		xshift; */
+
+/* 	xshift = 0; */
+/* 	if (orientation[1] == WEST) */
+/* 		xshift = -1; */
+/* 	char		yshift; */
+
+/* 	yshift = 0; */
+/* 	if (orientation[0] == NORTH) */
+/* 		yshift = -1; */
+/* 	get_hfirst_intercept(v, &hh, orientation, angle); */
+/* 	get_vfirst_intercept(v, &vv, orientation, angle); */
+/* 	intercept->distance = 999999999999999; */
+/* 	get_vstep(&hs, orientation, angle); */
+/* 	get_hstep(&vs, orientation, angle); */
+/* 	/1* if (!is_in_map(v, hh.x, hh.y + yshift)&&is_wall(v, hh.x, hh.y + yshift)) *1/ */
+/* 	/1* 	return ; *1/ */
+/* 	/1* if (is_wall(v, vv.x + xshift, vv.y)) *1/ */
+/* 	/1* 	return ; *1/ */
+/* 	if (is_in_map(v, hh.x, hh.y + yshift) && is_sprite(v, hh.x, hh.y + yshift) */
+/* 			&&is_in_map(v, hh.x +hs.x, hh.y +hs.y - yshift)&& is_sprite(v, hh.x + hs.x, hh.y + hs.y - yshift)) */
+/* 	{ */
+/* 		intercept->x = (hh.x + (hh.x + hs.x)) / 2; */
+/* 		intercept->y = (hh.y + (hh.y + hs.y)) / 2; */
+/* 		hh.y = (((int)hh.y + yshift) >> BLOCK_SIZE_BIT) */
+/* 			<< BLOCK_SIZE_BIT; */
+/* 		hh.y += BLOCK_SIZE_2; */
+/* 		hh.x = ((int)hh.x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT; */
+/* 		hh.x += BLOCK_SIZE_2; */
+/* 		intercept->distance = sqrt((hh.x - intercept->x) */
+/* 				* (hh.x - intercept->x) */
+/* 				+ (hh.y - intercept->y) * (hh.y - intercept->y)); */
+/* 		if (intercept->distance <= 32) */
+/* 		{ */
+/* 			intercept->x = hh.x; */
+/* 			intercept->y = hh.y; */
+/* 			return (set_ray_distance(v, intercept, angle)); */
+/* 		} */
+/* 		return ; */
+/* 	} */
+/* 	else if (is_in_map(v, vv.x + xshift, vv.y) &&is_sprite(v, vv.x + xshift, vv.y) */
+/* 			&& is_in_map(v, vv.x + vs.x - xshift, vv.y + vs.y) && is_sprite(v, vv.x + vs.x - xshift, vv.y + vs.y)) */
+/* 	{ */
+/* 		intercept->x = (vv.x + (vv.x + vs.x)) / 2; */
+/* 		intercept->y = (vv.y + (vv.y + vs.y)) / 2; */
+/* 		vv.y = ((int)vv.y >> BLOCK_SIZE_BIT) */
+/* 			<< BLOCK_SIZE_BIT; */
+/* 		vv.y += BLOCK_SIZE_2; */
+/* 		vv.x = (((int)vv.x + xshift) >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT; */
+/* 		vv.x += BLOCK_SIZE_2; */
+/* 		intercept->distance = sqrt((vv.x - intercept->x) */
+/* 				* (vv.x - intercept->x) */
+/* 				+ (vv.y - intercept->y) * (vv.y - intercept->y)); */
+/* 		if (intercept->distance <= 32) */
+/* 		{ */
+/* 			intercept->x = vv.x; */
+/* 			intercept->y = vv.y; */
+/* 			return (set_ray_distance(v, intercept, angle)); */
+/* 		} */
+/* 		return ; */
+/* 	} */
+/* 	else if (is_in_map(v, hh.x, hh.y + yshift)&&is_sprite(v, hh.x, hh.y + yshift) */
+/* 			&& is_in_map(v, vv.x - xshift, vv.y) &&is_sprite(v, vv.x - xshift, vv.y)) */
+/* 	{ */
+/* 		intercept->x = (hh.x + vv.x) / 2; */
+/* 		intercept->y = (hh.y + vv.y) / 2; */
+/* 		hh.y = (((int)hh.y + yshift) >> BLOCK_SIZE_BIT) */
+/* 			<< BLOCK_SIZE_BIT; */
+/* 		hh.y += BLOCK_SIZE_2; */
+/* 		hh.x = ((int)hh.x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT; */
+/* 		hh.x += BLOCK_SIZE_2; */
+/* 		intercept->distance = sqrt((hh.x - intercept->x) */
+/* 				* (hh.x - intercept->x) */
+/* 				+ (hh.y - intercept->y) * (hh.y - intercept->y)); */
+/* 		if (intercept->distance <= 32) */
+/* 		{ */
+/* 			intercept->x = hh.x; */
+/* 			intercept->y = hh.y; */
+/* 			return (set_ray_distance(v, intercept, angle)); */
+/* 		} */
+/* 		return ; */
+/* 	} */
+/* 	else if (is_in_map(v, vv.x + xshift, vv.y)&&is_sprite(v, vv.x + xshift, vv.y) */
+/* 			&& is_in_map(v, hh.x, hh.y - yshift)&&is_sprite(v, hh.x, hh.y - yshift)) */
+/* 	{ */
+/* 		intercept->x = (hh.x + vv.x) / 2; */
+/* 		intercept->y = (hh.y + vv.y) / 2; */
+/* 		hh.y = (((int)hh.y + yshift) >> BLOCK_SIZE_BIT) */
+/* 			<< BLOCK_SIZE_BIT; */
+/* 		hh.y += BLOCK_SIZE_2; */
+/* 		hh.x = ((int)hh.x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT; */
+/* 		hh.x += BLOCK_SIZE_2; */
+/* 		intercept->distance = sqrt((hh.x - intercept->x) */
+/* 				* (hh.x - intercept->x) */
+/* 				+ (hh.y - intercept->y) * (hh.y - intercept->y)); */
+/* 		if (intercept->distance <= 32) */
+/* 		{ */
+/* 			intercept->x = hh.x; */
+/* 			intercept->y = hh.y; */
+/* 			return (set_ray_distance(v, intercept, angle)); */
+/* 		} */
+/* 	} */
+/* } */

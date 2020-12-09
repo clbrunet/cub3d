@@ -63,3 +63,76 @@ void		search_horiz_hit(t_hit *intercept, t_vars *v,
 	}
 	intercept->distance = 999999999999999;
 }
+
+void		search_horiz_sprite(t_hit *intercept, t_vars *v,
+		t_orientation const *orientation, double const angle)
+{
+	t_dvector	step;
+	/* t_hit	bp; */
+	char		yshift;
+
+	/* bp = *intercept; */
+	yshift = 0;
+	if (orientation[0] == NORTH)
+		yshift = -1;
+	intercept->distance = 999999999999999;
+	get_hstep(&step, orientation, angle);
+	while (((orientation[0] == NORTH && intercept->y < v->player.y)
+				|| (orientation[0] == SOUTH && intercept->y > v->player.y))
+			&& !is_in_map(v, intercept->x, intercept->y + yshift))
+	{
+		intercept->x -= step.x;
+		intercept->y -= step.y;
+	}
+	if ((orientation[0] == NORTH && intercept->y > v->player.y)
+			|| (orientation[0] == SOUTH && intercept->y < v->player.y)
+			|| !is_in_map(v, intercept->x, intercept->y + yshift))
+		return ;
+	if (is_sprite(v, intercept->x, intercept->y + yshift))
+	{
+		t_dvector center;
+		t_dvector t[2];
+		center.x = (((int)intercept->x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+		center.y = ((((int)intercept->y + yshift) >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+		t[0].x = center.x + cos(normalize_angle(v->player.angle + M_PI_2)) * 32;
+		t[0].y = center.y - sin(normalize_angle(v->player.angle + M_PI_2)) * 32;
+		t[1].x = center.x + cos(normalize_angle(v->player.angle - M_PI_2)) * 32;
+		t[1].y = center.y - sin(normalize_angle(v->player.angle - M_PI_2)) * 32;
+		if (get_line_intersection(t[0].x, t[0].y, t[1].x, t[1].y, v->player.x, v->player.y, intercept->x + step.x, intercept->y + step.y, &intercept->x, &intercept->y))
+		{
+			intercept->offset = (int)dist(t[0], intercept->x, intercept->y);
+			/* intercept->x = center.x; */
+			/* intercept->y = center.y; */
+			return (set_sprite_distance(v, intercept, angle));
+		}
+		return ;
+	}
+	intercept->x -= step.x;
+	intercept->y -= step.y;
+	while (!((orientation[0] == NORTH && intercept->y > v->player.y)
+				|| (orientation[0] == SOUTH && intercept->y < v->player.y)
+				|| !is_in_map(v, intercept->x, intercept->y + yshift)))
+	{
+		if (is_sprite(v, intercept->x, intercept->y + yshift))
+		{
+			t_dvector center;
+			t_dvector t[2];
+			center.x = (((int)intercept->x >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+			center.y = ((((int)intercept->y + yshift) >> BLOCK_SIZE_BIT) << BLOCK_SIZE_BIT) + BLOCK_SIZE_2;
+			t[0].x = center.x + cos(normalize_angle(v->player.angle + M_PI_2)) * 32;
+			t[0].y = center.y - sin(normalize_angle(v->player.angle + M_PI_2)) * 32;
+			t[1].x = center.x + cos(normalize_angle(v->player.angle - M_PI_2)) * 32;
+			t[1].y = center.y - sin(normalize_angle(v->player.angle - M_PI_2)) * 32;
+			if (get_line_intersection(t[0].x, t[0].y, t[1].x, t[1].y, v->player.x, v->player.y, intercept->x + step.x, intercept->y + step.y, &intercept->x, &intercept->y))
+			{
+				intercept->offset = (int)dist(t[0], intercept->x, intercept->y);
+				/* intercept->x = center.x; */
+				/* intercept->y = center.y; */
+				return (set_sprite_distance(v, intercept, angle));
+			}
+			return ;
+		}
+		intercept->x -= step.x;
+		intercept->y -= step.y;
+	}
+}
