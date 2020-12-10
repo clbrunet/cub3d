@@ -13,97 +13,133 @@
 #include "raycasting.h"
 #include "minilibx.h"
 
-void	get_angle_orientation(t_orientation *orientation, double const angle)
+void	get_angle_orientation(t_ray *ray)
 {
-	if (angle < M_PI)
-		orientation[0] = NORTH;
+	if (ray->angle < M_PI)
+		ray->orientation[0] = NORTH;
 	else
-		orientation[0] = SOUTH;
-	if (M_PI_2 < angle && angle < 3 * M_PI_2)
-		orientation[1] = WEST;
+		ray->orientation[0] = SOUTH;
+	if (M_PI_2 < ray->angle && ray->angle < 3 * M_PI_2)
+		ray->orientation[1] = WEST;
 	else
-		orientation[1] = EAST;
+		ray->orientation[1] = EAST;
 }
 
-void	set_ray_distance(t_vars *v, t_hit *intercept, double const angle)
+void	set_ray_distance(t_hit *hit, double const angle, t_vars *v)
 {
-	intercept->distance = sqrt((v->player.x - intercept->x)
-			* (v->player.x - intercept->x)
-			+ (v->player.y - intercept->y) * (v->player.y - intercept->y));
-	intercept->distance *= cos(fabs(v->player.angle - angle));
+	hit->distance = sqrt((v->player.x - hit->x)
+			* (v->player.x - hit->x)
+			+ (v->player.y - hit->y) * (v->player.y - hit->y));
+	hit->distance *= cos(fabs(v->player.angle - angle));
 }
 
-void	set_sprite_distance(t_vars *v, t_hit *intercept, double const angle)
+void	search_sprites1(t_ray *ray, t_vars *v)
 {
-	intercept->distance = sqrt((v->player.x - intercept->x)
-			* (v->player.x - intercept->x)
-			+ (v->player.y - intercept->y) * (v->player.y - intercept->y));
-	intercept->distance *= cos(fabs(v->player.angle - angle));
-	/* (void)angle; */
-}
-
-void	cast_ray(t_vars *v, int col, double const angle)
-{
-	t_orientation	orientation[2];
-	t_hit			horiz_hit;
-	t_hit			vert_hit;
-
-	get_angle_orientation(orientation, angle);
-	search_horiz_hit(&horiz_hit, v, orientation, angle);
-	search_vert_hit(&vert_hit, v, orientation, angle);
-	if (horiz_hit.distance < vert_hit.distance)
+	char hbool = 1;
+	char vbool = 1;
+	search_h_sprite_hit(ray, v);
+	search_v_sprite_hit(ray, v);
+	while (hbool || vbool)
 	{
-		horiz_hit.height = BLOCK_SIZE / horiz_hit.distance * v->project_dist;
-		horiz_hit.offset = (int)horiz_hit.x % BLOCK_SIZE;
-		if (orientation[0] == SOUTH)
+		hbool = 0;
+		vbool = 0;
+		if (ray->h_hit.distance < 9999999999 && (ray->v_hit.distance > 9999999999
+					|| ray->h_hit.distance > ray->v_hit.distance))
 		{
-			horiz_hit.offset = abs(horiz_hit.offset - (BLOCK_SIZE - 1));
-			draw_col(col, &horiz_hit, &v->textures.south, v);
+			ray->h_hit.height = BLOCK_SIZE / ray->h_hit.distance * v->project_dist;
+			draw_col(ray->col, &ray->h_hit, &v->textures.sprite, v);
+			search_h_sprite_hit(ray, v);
+			hbool = 1;
+		}
+		else if (ray->v_hit.distance < 9999999999)
+		{
+			if (ray->v_hit.distance < ray->wall_dist)
+			{
+				ray->v_hit.height = BLOCK_SIZE / ray->v_hit.distance * v->project_dist;
+				draw_col(ray->col, &ray->v_hit, &v->textures.sprite, v);
+			}
+			search_v_sprite_hit(ray, v);
+			vbool = 1;
+		}
+	}
+}
+
+void	search_sprites2(t_ray *ray, t_vars *v)
+{
+	char hbool = 1;
+	char vbool = 1;
+	search_h_sprite_hit(ray, v);
+	search_v_sprite_hit(ray, v);
+	while (hbool || vbool)
+	{
+		hbool = 0;
+		vbool = 0;
+		if (ray->h_hit.distance < 9999999999 && (ray->v_hit.distance > 9999999999
+					|| ray->h_hit.distance > ray->v_hit.distance))
+		{
+			if (ray->h_hit.distance < ray->wall_dist)
+			{
+				ray->h_hit.height = BLOCK_SIZE / ray->h_hit.distance * v->project_dist;
+				draw_col(ray->col, &ray->h_hit, &v->textures.sprite, v);
+			}
+			search_h_sprite_hit(ray, v);
+			hbool = 1;
+		}
+		else if (ray->v_hit.distance < 9999999999)
+		{
+			ray->v_hit.height = BLOCK_SIZE / ray->v_hit.distance * v->project_dist;
+			draw_col(ray->col, &ray->v_hit, &v->textures.sprite, v);
+			search_v_sprite_hit(ray, v);
+			vbool = 1;
+		}
+	}
+}
+
+void	cast_ray(t_ray *ray, t_vars *v)
+{
+	get_angle_orientation(ray);
+	search_h_wall_hit(ray, v);
+	search_v_wall_hit(ray, v);
+	if (ray->h_hit.distance < ray->v_hit.distance)
+	{
+		ray->wall_dist = ray->h_hit.distance;
+		ray->h_hit.height = BLOCK_SIZE / ray->h_hit.distance * v->project_dist;
+		ray->h_hit.offset = (int)ray->h_hit.x % BLOCK_SIZE;
+		if (ray->orientation[0] == SOUTH)
+		{
+			ray->h_hit.offset = abs(ray->h_hit.offset - (BLOCK_SIZE - 1));
+			draw_col(ray->col, &ray->h_hit, &v->textures.south, v);
 		}
 		else
-			draw_col(col, &horiz_hit, &v->textures.north, v);
-		search_vert_sprite(&vert_hit, v, orientation, angle);
-		vert_hit.height = BLOCK_SIZE / vert_hit.distance * v->project_dist;
-		if (vert_hit.distance < horiz_hit.distance)
-			draw_col(col, &vert_hit, &v->textures.sprite, v);
-		search_horiz_sprite(&horiz_hit, v, orientation, angle);
-		horiz_hit.height = BLOCK_SIZE / horiz_hit.distance * v->project_dist;
-		if (horiz_hit.distance < 999999999999)
-			draw_col(col, &horiz_hit, &v->textures.sprite, v);
+			draw_col(ray->col, &ray->h_hit, &v->textures.north, v);
+		search_sprites1(ray, v);
 	}
 	else
 	{
-		vert_hit.height = BLOCK_SIZE / vert_hit.distance * v->project_dist;
-		vert_hit.offset = (int)vert_hit.y % BLOCK_SIZE;
-		if (orientation[1] == WEST)
+		ray->wall_dist = ray->v_hit.distance;
+		ray->v_hit.height = BLOCK_SIZE / ray->v_hit.distance * v->project_dist;
+		ray->v_hit.offset = (int)ray->v_hit.y % BLOCK_SIZE;
+		if (ray->orientation[1] == WEST)
 		{
-			vert_hit.offset = abs(vert_hit.offset - (BLOCK_SIZE - 1));
-			draw_col(col, &vert_hit, &v->textures.west, v);
+			ray->v_hit.offset = abs(ray->v_hit.offset - (BLOCK_SIZE - 1));
+			draw_col(ray->col, &ray->v_hit, &v->textures.west, v);
 		}
 		else
-			draw_col(col, &vert_hit, &v->textures.east, v);
-		search_horiz_sprite(&horiz_hit, v, orientation, angle);
-		horiz_hit.height = BLOCK_SIZE / horiz_hit.distance * v->project_dist;
-		if (horiz_hit.distance < vert_hit.distance)
-			draw_col(col, &horiz_hit, &v->textures.sprite, v);
-		search_vert_sprite(&vert_hit, v, orientation, angle);
-		vert_hit.height = BLOCK_SIZE / vert_hit.distance * v->project_dist;
-		if (vert_hit.distance < 999999999999)
-			draw_col(col, &vert_hit, &v->textures.sprite, v);
+			draw_col(ray->col, &ray->v_hit, &v->textures.east, v);
+		search_sprites2(ray, v);
 	}
 }
 
 void	cast_rays(t_vars *v)
 {
-	int			col;
-	double		angle;
+	t_ray		ray;
 
-	angle = normalize_angle(v->player.angle + v->player.fov / 2);
-	col = 0;
-	while (col < v->res.x)
+	ray.angle = normalize_angle(v->player.angle + v->player.fov / 2);
+	ray.col = 0;
+	while (ray.col < v->res.x)
 	{
-		cast_ray(v, col, angle);
-		angle = normalize_angle(angle - v->player.fov / v->res.x);
-		col++;
+		cast_ray(&ray, v);
+		ray.angle = normalize_angle(ray.angle - v->player.fov / v->res.x);
+		ray.col++;
 	}
 }

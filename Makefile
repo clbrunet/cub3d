@@ -19,7 +19,6 @@ SRCS		=	srcs/main.c		\
 				srcs/raycasting/base.c				\
 				srcs/raycasting/horizontal_hit.c	\
 				srcs/raycasting/vertical_hit.c		\
-				srcs/raycasting/sprite.c
 
 OBJS		=	$(SRCS:.c=.o)
 

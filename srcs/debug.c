@@ -8,6 +8,13 @@ void	print_res(t_ivector res)
 	printf("X : %4i, Y : %4i\n", (int)res.x, (int)res.y);
 }
 
+void	print_hit(t_hit *hit)
+{
+	printf("\n--------------- HIT --------------\n\n");
+	printf("x: %f, y: %f\n", hit->x, hit->y);
+	printf("dist: %f, hei: %d\n", hit->distance, hit->height);
+}
+
 void	print_textures(t_textures textures)
 {
 	printf("\n------------ TEXTURES ------------\n\n");

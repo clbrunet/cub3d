@@ -28,27 +28,14 @@
 # define GREEN	0x0000FF00
 # define BLUE	0x000000FF
 
-typedef enum	e_orientation
-{
-	NORTH,
-	SOUTH,
-	WEST,
-	EAST
-}				t_orientation;
+void	get_angle_orientation(t_ray *ray);
+void	set_ray_distance(t_hit *hit, double const angle, t_vars *v);
 
-void	get_angle_orientation(t_orientation *orientation, double const angle);
-void	set_ray_distance(t_vars *v, t_hit *intercept, double const angle);
-void	set_sprite_distance(t_vars *v, t_hit *intercept, double const angle);
+void	search_h_wall_hit(t_ray *ray, t_vars *v);
+char	search_h_sprite_hit(t_ray *ray, t_vars *v);
+void	search_v_wall_hit(t_ray *ray, t_vars *v);
+char	search_v_sprite_hit(t_ray *ray, t_vars *v);
 
-void		search_horiz_hit(t_hit *intercept, t_vars *v,
-		t_orientation const *orientation, double const angle);
-void		search_horiz_sprite(t_hit *intercept, t_vars *v,
-		t_orientation const *orientation, double const angle);
-void		search_vert_hit(t_hit *intercept, t_vars *v,
-		t_orientation const *orientation, double const angle);
-void		search_vert_sprite(t_hit *intercept, t_vars *v,
-		t_orientation const *orientation, double const angle);
-
-void			cast_rays(t_vars *v);
+void	cast_rays(t_vars *v);
 
 #endif

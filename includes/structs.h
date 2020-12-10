@@ -95,8 +95,30 @@ typedef struct	s_hit
 	double	y;
 	double	distance;
 	int		height;
-	int		offset;
+	char	offset;
 }				t_hit;
+
+typedef enum	e_orientation
+{
+	NORTH,
+	SOUTH,
+	WEST,
+	EAST
+}				t_orientation;
+
+typedef struct	s_ray
+{
+	int				col;
+	double			angle;
+	t_orientation	orientation[2];
+	t_hit			h_hit;
+	char			h_yshift;
+	t_dvector		h_step;
+	t_hit			v_hit;
+	char			v_xshift;
+	t_dvector		v_step;
+	double			wall_dist;
+}				t_ray;
 
 typedef struct	s_vars
 {

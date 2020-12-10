@@ -6,19 +6,21 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 16:13:02 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/06 12:09:23 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/09 18:25:25 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibx.h"
 
-void	mlx_img_pixel_put(t_img_data img_data, int x, int y, unsigned color)
+void	mlx_img_pixel_put(t_vars *v, int x, int y, unsigned color)
 {
 	char	*dst;
 
-	dst = img_data.addr + (y * img_data.line_length)
-		+ (x * (img_data.bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	if (x < 0 || y < 0 || x >= v->res.x || y >= v->res.y)
+		return ;
+	dst = v->img.addr + (y * v->img.line_length)
+		+ (x * (v->img.bits_per_pixel / 8));
+	*(unsigned *)dst = color;
 }
 
 unsigned	mlx_img_pixel_get_value(t_img_data img_data, int x, int y)
@@ -27,10 +29,10 @@ unsigned	mlx_img_pixel_get_value(t_img_data img_data, int x, int y)
 
 	dst = img_data.addr + (y * img_data.line_length)
 		+ (x * (img_data.bits_per_pixel / 8));
-	return (*(unsigned int*)dst);
+	return (*(unsigned *)dst);
 }
 
-void	mlx_clear_img(t_img_data img_data, int x, int y)
+void	mlx_clear_img(t_vars *v, int x, int y)
 {
 	int		i;
 	int		j;
@@ -41,7 +43,7 @@ void	mlx_clear_img(t_img_data img_data, int x, int y)
 		j = 0;
 		while (j < x)
 		{
-			mlx_img_pixel_put(img_data, j, i, RED);
+			mlx_img_pixel_put(v, j, i, RED);
 			j++;
 		}
 		i++;
@@ -59,7 +61,7 @@ void	draw_rect(t_vars *v, int tlx, int tly, int brx, int bry, int color)
 		while (tlx <= brx)
 		{
 			if (tly > 0)
-				mlx_img_pixel_put(v->img, tlx, tly, color);
+				mlx_img_pixel_put(v, tlx, tly, color);
 			tlx++;
 		}
 		tly++;
@@ -80,25 +82,25 @@ void	draw_minimap(t_vars *v)
 			if (v->map.grid
 					[(int)((double)i / v->map.minimap_factor) >> BLOCK_SIZE_BIT]
 					[(int)(j / v->map.minimap_factor) >> BLOCK_SIZE_BIT] == '1')
-				mlx_img_pixel_put(v->img, j, i, WHITE);
+				mlx_img_pixel_put(v, j, i, WHITE);
 			else if (v->map.grid
 					[(int)((double)i / v->map.minimap_factor) >> BLOCK_SIZE_BIT]
 					[(int)(j / v->map.minimap_factor) >> BLOCK_SIZE_BIT] == 'S')
-				mlx_img_pixel_put(v->img, j, i, BLUE);
-			else if (j % (int)round(64 * v->map.minimap_factor) && i % (int)round(64
+				mlx_img_pixel_put(v, j, i, BLUE);
+			else if (j % (int)round(BLOCK_SIZE * v->map.minimap_factor) && i % (int)round(BLOCK_SIZE
 						*v->map.minimap_factor))
-				mlx_img_pixel_put(v->img, j, i, 0x00ffb74d);
+				mlx_img_pixel_put(v, j, i, 0x00ffb74d);
 			else
-				mlx_img_pixel_put(v->img, j, i, 0);
+				mlx_img_pixel_put(v, j, i, 0);
 
 			j++;
 		}
 		i++;
 	}
-	draw_rect(v, v->player.x * v->map.minimap_factor - 2,
-			v->player.y * v->map.minimap_factor - 2,
-			v->player.x * v->map.minimap_factor + 2,
-			v->player.y * v->map.minimap_factor + 2, GREEN);
+	draw_rect(v, v->player.x * v->map.minimap_factor - 10,
+			v->player.y * v->map.minimap_factor - 10,
+			v->player.x * v->map.minimap_factor + 10,
+			v->player.y * v->map.minimap_factor + 10, GREEN);
 	double newx = v->player.x + cos(v->player.angle) * 10;
 	double newy = v->player.y - sin(v->player.angle) * 10;
 	for (int c = 0; c < 100; c++)
@@ -106,7 +108,7 @@ void	draw_minimap(t_vars *v)
 		draw_rect(v, newx * v->map.minimap_factor - 1,
 				newy * v->map.minimap_factor - 1,
 				newx * v->map.minimap_factor + 1,
-				newy * v->map.minimap_factor + 1, GREEN);
+				newy * v->map.minimap_factor + 1, RED);
 		newx = newx + cos(v->player.angle) * 10;
 		newy = newy - sin(v->player.angle) * 10;
 	}
@@ -117,7 +119,7 @@ void	draw_minimap(t_vars *v)
 		draw_rect(v, newx * v->map.minimap_factor - 1,
 				newy * v->map.minimap_factor - 1,
 				newx * v->map.minimap_factor + 1,
-				newy * v->map.minimap_factor + 1, GREEN);
+				newy * v->map.minimap_factor + 1, RED);
 		newx = newx + cos(v->player.angle + deg_to_rad(30)) * 10;
 		newy = newy - sin(v->player.angle + deg_to_rad(30)) * 10;
 	}
@@ -128,7 +130,7 @@ void	draw_minimap(t_vars *v)
 		draw_rect(v, newx * v->map.minimap_factor - 1,
 				newy * v->map.minimap_factor - 1,
 				newx * v->map.minimap_factor + 1,
-				newy * v->map.minimap_factor + 1, GREEN);
+				newy * v->map.minimap_factor + 1, RED);
 		newx = newx + cos(v->player.angle - deg_to_rad(30)) * 10;
 		newy = newy - sin(v->player.angle - deg_to_rad(30)) * 10;
 	}
@@ -145,14 +147,10 @@ void	draw_col(int col, t_hit *hit, t_texture *texture, t_vars *v)
 		y = 0;
 		while (y < v->res.y)
 		{
-			/* mlx_img_pixel_put(v->img, col, y, */
-			/* 		mlx_img_pixel_get_value(texture->img, texture_col, */
-			/* 			(y + (hit->height - v->res.y) / 2) */
-			/* 			* texture->height / hit->height)); */
 			unsigned color = mlx_img_pixel_get_value(texture->img, texture_col,
 					(y + (hit->height - v->res.y) / 2) * texture->height / hit->height);
-			if (color <= OPAQUE_COLOR_MASK)
-				mlx_img_pixel_put(v->img, col, y, color);
+			if (!(color & TRANSPARENT_BLACK_MASK))
+				mlx_img_pixel_put(v, col, y, color);
 			y++;
 		}
 		return ;
@@ -160,7 +158,7 @@ void	draw_col(int col, t_hit *hit, t_texture *texture, t_vars *v)
 	y = 0;
 	while (y < v->res.y / 2 - hit->height / 2)
 	{
-		mlx_img_pixel_put(v->img, col, y, 0x0090caf9);
+		mlx_img_pixel_put(v, col, y, 0x0090caf9);
 		y++;
 	}
 	y = 0;
@@ -168,16 +166,15 @@ void	draw_col(int col, t_hit *hit, t_texture *texture, t_vars *v)
 	{
 		unsigned color = mlx_img_pixel_get_value(texture->img, texture_col,
 				y * texture->height / hit->height);
-		if (color <= OPAQUE_COLOR_MASK)
-			mlx_img_pixel_put(v->img, col, y + (v->res.y / 2 - hit->height / 2),
+		if (!(color & TRANSPARENT_BLACK_MASK))
+			mlx_img_pixel_put(v, col, y + (v->res.y / 2 - hit->height / 2),
 					color);
 		y++;
 	}
 	while (y + (v->res.y / 2 - hit->height / 2) < v->res.y)
 	{
-		mlx_img_pixel_put(v->img, col, y + (v->res.y / 2 - hit->height / 2),
+		mlx_img_pixel_put(v, col, y + (v->res.y / 2 - hit->height / 2),
 				0x00ffb74d);
 		y++;
 	}
 }
-

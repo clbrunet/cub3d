@@ -97,21 +97,21 @@ void	edit(t_vars *v)
 	else if (v->keys_down.z && !v->keys_down.s
 			&& v->keys_down.d && !v->keys_down.q)
 		move(v, v->player.x + cos(normalize_angle(v->player.angle - M_PI_4))
-			* (v->player.speed / 3 * 2.5),
+				* (v->player.speed / 3 * 2.5),
 				v->player.y - sin(normalize_angle(v->player.angle - M_PI_4))
-			* (v->player.speed / 3 * 2.5));
+				* (v->player.speed / 3 * 2.5));
 	else if (v->keys_down.s && !v->keys_down.z
 			&& v->keys_down.q && !v->keys_down.d)
 		move(v, v->player.x - cos(normalize_angle(v->player.angle - M_PI_4))
-			* (v->player.speed / 3 * 2),
+				* (v->player.speed / 3 * 2),
 				v->player.y + sin(normalize_angle(v->player.angle - M_PI_4))
-			* (v->player.speed / 3 * 2));
+				* (v->player.speed / 3 * 2));
 	else if (v->keys_down.s && !v->keys_down.z
 			&& v->keys_down.d && !v->keys_down.q)
 		move(v, v->player.x - cos(normalize_angle(v->player.angle + M_PI_4))
-			* (v->player.speed / 3 * 2),
+				* (v->player.speed / 3 * 2),
 				v->player.y + sin(normalize_angle(v->player.angle + M_PI_4))
-			* (v->player.speed / 3 * 2));
+				* (v->player.speed / 3 * 2));
 	else if (v->keys_down.z && !v->keys_down.s)
 		move(v, v->player.x + cos(v->player.angle) * v->player.speed,
 				v->player.y - sin(v->player.angle) * v->player.speed);
@@ -120,14 +120,14 @@ void	edit(t_vars *v)
 				v->player.y + sin(v->player.angle) * (v->player.speed / 3 * 2));
 	else if (v->keys_down.q && !v->keys_down.d)
 		move(v, v->player.x + cos(normalize_angle(v->player.angle + M_PI_2))
-			* (v->player.speed / 3 * 2),
+				* (v->player.speed / 3 * 2),
 				v->player.y - sin(normalize_angle(v->player.angle + M_PI_2))
-			* (v->player.speed / 3 * 2));
+				* (v->player.speed / 3 * 2));
 	else if (v->keys_down.d && !v->keys_down.q)
 		move(v, v->player.x - cos(normalize_angle(v->player.angle + M_PI_2))
-			* (v->player.speed / 3 * 2),
+				* (v->player.speed / 3 * 2),
 				v->player.y + sin(normalize_angle(v->player.angle + M_PI_2))
-			* (v->player.speed / 3 * 2));
+				* (v->player.speed / 3 * 2));
 }
 
 int		loop_hook(t_vars *v)

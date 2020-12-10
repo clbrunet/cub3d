@@ -11,5 +11,6 @@ void	print_map(char **map);
 void	print_elems(t_vars *v);
 void	print_player(t_player *player);
 void	print_keys(t_keys *keys_down);
+void	print_hit(t_hit *hit);
 
 #endif
