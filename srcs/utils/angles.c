@@ -22,7 +22,7 @@ double	rad_to_deg(double angle)
 	return ((180 * angle) / M_PI);
 }
 
-double	normalize_angle(double angle)
+double	fix_angle(double angle)
 {
 	if (angle < 0)
 		return (angle + 2 * M_PI);

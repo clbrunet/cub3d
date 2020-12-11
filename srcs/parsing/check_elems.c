@@ -14,7 +14,7 @@
 
 void	check_elems(t_vars *v)
 {
-	if (v->res.x == -1)
+	if (v->res.x == 0)
 		error("Resolution missing", v, ERROR);
 	else if (!v->textures.north.width)
 		error("North texture missing", v, ERROR);

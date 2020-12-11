@@ -1,17 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   structs.h                                          :+:      :+:    :+:   */
+/*   data_structures.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/29 07:21:52 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/29 07:51:35 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/11 17:34:22 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRUCTS_H
-# define STRUCTS_H
+#ifndef DATA_STRUCTURES_H
+# define DATA_STRUCTURES_H
+
+typedef enum	e_error
+{
+	PERROR,
+	ERROR
+}				t_error;
+
+typedef enum	e_orientation
+{
+	NORTH,
+	SOUTH,
+	WEST,
+	EAST
+}				t_orientation;
+
+typedef union	u_color
+{
+	unsigned		full;
+	unsigned char	bytes[4];
+}				t_color;
 
 typedef struct	s_dvector
 {
@@ -19,13 +39,20 @@ typedef struct	s_dvector
 	double	y;
 }				t_dvector;
 
-typedef struct	s_ivector
+typedef struct	s_uvector
 {
-	int		x;
-	int		y;
-}				t_ivector;
+	unsigned	x;
+	unsigned	y;
+}				t_uvector;
 
-typedef struct	s_img_data {
+typedef struct	s_dline
+{
+	t_dvector	p1;
+	t_dvector	p2;
+}				t_dline;
+
+typedef struct	s_img_data
+{
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
@@ -49,12 +76,6 @@ typedef struct	s_textures
 	t_texture	sprite;
 }				t_textures;
 
-typedef union	u_color
-{
-	unsigned		full;
-	unsigned char	bytes[4];
-}				t_color;
-
 typedef struct	s_colors
 {
 	t_color		floor;
@@ -63,19 +84,18 @@ typedef struct	s_colors
 
 typedef struct	s_player
 {
-	double		x;
-	double		y;
+	t_dvector	pos;
 	double		angle;
 	double		fov;
 	double		speed;
-	int			height;
+	unsigned	height;
 }				t_player;
 
 typedef struct	s_map
 {
 	char		**grid;
 	double		minimap_factor;
-	t_ivector	max;
+	t_uvector	max;
 }				t_map;
 
 typedef struct	s_keys
@@ -91,24 +111,15 @@ typedef struct	s_keys
 
 typedef struct	s_hit
 {
-	double	x;
-	double	y;
-	double	distance;
-	int		height;
-	char	offset;
+	t_dvector	pos;
+	double		distance;
+	unsigned	height;
+	unsigned	offset;
 }				t_hit;
-
-typedef enum	e_orientation
-{
-	NORTH,
-	SOUTH,
-	WEST,
-	EAST
-}				t_orientation;
 
 typedef struct	s_ray
 {
-	int				col;
+	unsigned		col;
 	double			angle;
 	t_orientation	orientation[2];
 	t_hit			h_hit;
@@ -125,13 +136,13 @@ typedef struct	s_vars
 	void		*mlx;
 	void		*win;
 	t_img_data	img;
-	t_ivector	res;
+	t_uvector	res;
 	t_textures	textures;
 	t_colors	colors;
 	t_map		map;
 	t_player	player;
 	double		project_dist;
-	t_keys		keys_down;
+	t_keys		keys;
 }				t_vars;
 
 #endif

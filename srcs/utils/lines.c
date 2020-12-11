@@ -6,71 +6,65 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 06:30:52 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/09 06:30:52 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/11 12:43:57 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "structs.h"
 #include <stdlib.h>
 #include <math.h>
 
-t_dvector	dvectornew(double x, double y)
-{
-	t_dvector	new;
+#include "data_structures.h"
 
-	new.x = x;
-	new.y = y;
+t_dvector	dvectoradd(t_dvector v1, t_dvector v2)
+{
+	t_dvector	res;
+
+	res.x = v1.x + v2.x;
+	res.y = v1.y + v2.y;
+	return (res);
+}
+
+t_dline		dlinenew(t_dvector p1, t_dvector p2)
+{
+	t_dline	new;
+
+	new.p1 = p1;
+	new.p2 = p2;
 	return (new);
 }
 
-char get_line_intersection(double p0_x, double p0_y, double p1_x, double p1_y, 
-    double p2_x, double p2_y, double p3_x, double p3_y, double *i_x, double *i_y)
+double		dist(t_dvector p1, t_dvector p2)
 {
-    double s1_x, s1_y, s2_x, s2_y;
-    s1_x = p1_x - p0_x;     s1_y = p1_y - p0_y;
-    s2_x = p3_x - p2_x;     s2_y = p3_y - p2_y;
-
-    double s, t;
-    s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
-    t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
-
-    if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
-    {
-        if (i_x != NULL)
-            *i_x = p0_x + (t * s1_x);
-        if (i_y != NULL)
-            *i_y = p0_y + (t * s1_y);
-        return (1);
-    }
-
-    return (0);
+	return (sqrt((p1.x - p2.x) * (p1.x - p2.x)
+				+ (p1.y - p2.y) * (p1.y - p2.y)));
 }
 
-double	dist(t_dvector p0, double p1x, double p1y)
+double		playerdist_fisheyeless(t_dvector p, double const angle, t_vars *v)
 {
-	return (sqrt((p0.x - p1x) * (p0.x - p1x)
-			+ (p0.y - p1y) * (p0.y - p1y)));
+	return (sqrt(pow(v->player.pos.x - p.x, 2) + pow((v->player.pos.y
+						- p.y), 2)) * cos(fabs(v->player.angle - angle)));
 }
 
-/* char get_line_intersection(t_dvector p0, t_dvector p1, */
-/*     double p2_x, double p2_y, double p3_x, double p3_y, double *i_x, double *i_y) */
-/* { */
-/*     double s1_x, s1_y, s2_x, s2_y; */
-/*     s1_x = p1.x - p0.x;     s1_y = p1.y - p0.y; */
-/*     s2_x = p3_x - p2_x;     s2_y = p3_y - p2_y; */
+char		get_line_intersection(t_dline l1, t_dline l2, t_dvector *inter)
+{
+	t_dvector	s1;
+	t_dvector	s2;
+	double		s;
+	double		t;
 
-/*     double s, t; */
-/*     s = (-s1_y * (p0.x - p2_x) + s1_x * (p0.y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y); */
-/*     t = ( s2_x * (p0.y - p2_y) - s2_y * (p0.x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y); */
-
-/*     if (s >= 0 && s <= 1 && t >= 0 && t <= 1) */
-/*     { */
-/*         if (i_x != NULL) */
-/*             *i_x = p0.x + (t * s1_x); */
-/*         if (i_y != NULL) */
-/*             *i_y = p0.y + (t * s1_y); */
-/*         return (1); */
-/*     } */
-
-/*     return (0); */
-/* } */
+	s1.x = l1.p2.x - l1.p1.x;
+	s1.y = l1.p2.y - l1.p1.y;
+	s2.x = l2.p2.x - l2.p1.x;
+	s2.y = l2.p2.y - l2.p1.y;
+	s = (-s1.y * (l1.p1.x - l2.p1.x) + s1.x * (l1.p1.y - l2.p1.y))
+		/ (-s2.x * s1.y + s1.x * s2.y);
+	t = (s2.x * (l1.p1.y - l2.p1.y) - s2.y * (l1.p1.x - l2.p1.x))
+		/ (-s2.x * s1.y + s1.x * s2.y);
+	if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+	{
+		inter->x = l1.p1.x + (t * s1.x);
+		inter->y = l1.p1.y + (t * s1.y);
+		return (1);
+	}
+	return (0);
+}

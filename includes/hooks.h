@@ -1,22 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   enums.h                                            :+:      :+:    :+:   */
+/*   hooks.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/01 12:05:50 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/01 12:05:50 by clbrunet         ###   ########.fr       */
+/*   Created: 2020/12/11 17:39:38 by clbrunet          #+#    #+#             */
+/*   Updated: 2020/12/11 17:44:00 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENUMS_H
-# define ENUMS_H
+#ifndef HOOKS_H
+# define HOOKS_H
 
-typedef enum	e_error
-{
-	PERROR,
-	ERROR
-}				t_error;
+# include <stdlib.h>
+# include <math.h>
+
+# include "mlx.h"
+# include "defines.h"
+# include "data_structures.h"
+# include "utils.h"
+
+void	one_axis_movements(t_vars *v);
+char	two_axis_movements(t_vars *v);
+
+int		keypress_hook(int keycode, t_vars *v);
+int		keyrelease_hook(int keycode, t_vars *v);
+int		loop_hook(t_vars *v);
+void	initialize_keys(t_keys *keys);
 
 #endif

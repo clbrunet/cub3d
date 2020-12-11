@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 13:15:10 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/05 13:15:10 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/11 12:14:08 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static void	set_player_props(t_vars *v, char c, int y, int x)
 	v->player.fov = M_PI / 3;
 	v->player.height = BLOCK_SIZE / 2;
 	v->player.speed = (double)(v->res.x * v->res.y) / 64000;
-	v->player.x = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * x;
-	v->player.y = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * y;
+	v->player.pos.x = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * x;
+	v->player.pos.y = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * y;
 	if (c == 'N')
 		v->player.angle = M_PI_2;
 	else if (c == 'S')

@@ -29,4 +29,10 @@
 # define ESC 65307
 # define SHIFT 65505
 
+# define BLACK	0x00000000
+# define WHITE	0x00FFFFFF
+# define RED	0x00FF0000
+# define GREEN	0x0000FF00
+# define BLUE	0x000000FF
+
 #endif

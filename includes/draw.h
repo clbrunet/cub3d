@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   draw.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/29 09:51:50 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/30 06:46:17 by clbrunet         ###   ########.fr       */
+/*   Created: 2020/12/11 17:53:03 by clbrunet          #+#    #+#             */
+/*   Updated: 2020/12/11 17:53:03 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
-
-# include "debug.h"
-
-# include <stdlib.h>
+#ifndef DRAW_H
+# define DRAW_H
 
 # include "mlx.h"
-# include "libft.h"
-# include "structs.h"
-# include "enums.h"
+# include "defines.h"
+# include "data_structures.h"
 
-void	initialize_mlx(t_vars *v);
-void	error(char const *const error_msg, t_vars *v, t_error const error);
+void		mlx_img_pixel_put(t_vars const *v, unsigned const x,
+		unsigned const y, unsigned const color);
+unsigned	mlx_img_pixel_get_value(t_img_data img_data, int x, int y);
+
+void		draw_col(unsigned const col, t_hit const *hit,
+		t_texture const *texture, t_vars const *v);
 
 #endif

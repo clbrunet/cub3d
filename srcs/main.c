@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "minilibx.h"
 #include "parsing.h"
+#include "hooks.h"
 
 void		error(char const *const error_msg, t_vars *v, t_error const error)
 {
@@ -26,19 +27,19 @@ void		error(char const *const error_msg, t_vars *v, t_error const error)
 	exit(1);
 }
 
-static void	check_av(char const *scene_path, char const *save_flag, t_vars *v)
+void	initialize_mlx(t_vars *v)
 {
-	unsigned	len;
-
-	len = ft_strlen(scene_path);
-	if (len < 4)
-		error("Wrong scene file extension", v, ERROR);
-	scene_path += len - 4;
-	if (!ft_strnstr(scene_path, ".cub", 4))
-		error("Wrong scene file extension", v, ERROR);
-	if (save_flag && (ft_strlen(save_flag) != 6
-				|| !ft_strnstr(save_flag, "--save", 6)))
-		error("Second parameter must be \"--save\"", v, ERROR);
+	if (!(v->win = mlx_new_window(v->mlx, v->res.x, v->res.y,
+					"Cub3D")))
+		error("Window creation failed", v, ERROR);
+	if (!(v->img.img = mlx_new_image(v->mlx, v->res.x, v->res.y)))
+		error("Image creation failed", v, ERROR);
+	v->img.addr = mlx_get_data_addr(v->img.img, &v->img.bits_per_pixel,
+			&v->img.line_length, &v->img.endian);
+	mlx_loop_hook(v->mlx, &loop_hook, v);
+	initialize_keys(&v->keys);
+	mlx_hook(v->win, KeyPress, KeyPressMask, &keypress_hook, v);
+	mlx_hook(v->win, KeyRelease, KeyReleaseMask, &keyrelease_hook, v);
 }
 
 static void	game(char const *const scene_path)
@@ -66,7 +67,7 @@ static void	save(char const *const scene_path, char const *const save_flag)
 	v.mlx = NULL;
 	check_av(scene_path, save_flag, &v);
 	parse_scene(scene_path, &v);
-	initialize_mlx(&v);
+	/* initialize_mlx(&v); */
 	/* free_strs(v.map.grid); */
 }
 

@@ -17,7 +17,7 @@ int		ft_atoitrim(char const **nptr)
 	int		nb;
 
 	if (!ft_isdigit(**nptr))
-		return (-1);
+		return (0);
 	nb = **nptr - '0';
 	(*nptr)++;
 	while (ft_isdigit(**nptr))

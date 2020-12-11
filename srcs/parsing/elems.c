@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/01 07:13:15 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/01 07:34:54 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/11 15:21:39 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ static void	parse_res(char const *line, t_vars *v)
 	if (*line || v->res.x == 0 || v->res.y == 0)
 		error("Wrong resolution infos", v, ERROR);
 	mlx_get_screen_size(v->mlx, &screen_width, &screen_heigth);
-	if (v->res.x > screen_width)
+	if (v->res.x > (unsigned)screen_width)
 		v->res.x = screen_width;
-	if (v->res.y > screen_heigth)
+	if (v->res.y > (unsigned)screen_heigth)
 		v->res.y = screen_heigth;
 }
 
@@ -43,7 +43,7 @@ static void	parse_texture(char const *line, t_texture *texture, t_vars *v)
 		error("Wrong textures infos", v, ERROR);
 	else if (!(texture->img.img = mlx_xpm_file_to_image(v->mlx, (char *)line,
 			&texture->width, &texture->height)))
-		error("Image creation failed", v, ERROR);
+		error("Texture xpm file to image failed", v, ERROR);
 	texture->img.addr = mlx_get_data_addr(texture->img.img,
 			&texture->img.bits_per_pixel, &texture->img.line_length,
 			&texture->img.endian);

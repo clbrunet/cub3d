@@ -14,11 +14,14 @@ SRCS		=	srcs/main.c		\
 				srcs/parsing/check_elems.c	\
 				srcs/parsing/map.c			\
 				srcs/parsing/check_map.c	\
-				srcs/minilibx/base.c	\
-				srcs/minilibx/draw.c	\
+				srcs/hooks/base.c	\
+				srcs/hooks/movements.c	\
 				srcs/raycasting/base.c				\
 				srcs/raycasting/horizontal_hit.c	\
 				srcs/raycasting/vertical_hit.c		\
+				srcs/draw/base.c	\
+				srcs/draw/col.c
+
 
 OBJS		=	$(SRCS:.c=.o)
 
