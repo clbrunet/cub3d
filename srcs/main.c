@@ -6,19 +6,22 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 18:09:29 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/01 15:45:28 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/12 18:47:11 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minilibx.h"
+#include <X11/X.h>
+
 #include "parsing.h"
 #include "hooks.h"
+#include "raycasting.h"
+#include "draw.h"
 
 void		error(char const *const error_msg, t_vars *v, t_error const error)
 {
 	free(v->mlx);
 	/* free_textures(&v->textures); */
-	/* free_strs(v->map.grid); */
+	free_strs(v->map.grid);
 	ft_putendl_fd("Error", 2);
 	if (error == PERROR)
 		perror(error_msg);
@@ -52,6 +55,7 @@ static void	game(char const *const scene_path)
 	check_av(scene_path, NULL, &v);
 	parse_scene(scene_path, &v);
 	initialize_mlx(&v);
+	v.pixel_put_ft = &mlx_img_pixel_put;
 	mlx_loop(v.mlx);
 	/* free_strs(v.map.grid); */
 	/* mlx_destroy_window(v.mlx, v.win); */
@@ -64,11 +68,26 @@ static void	save(char const *const scene_path, char const *const save_flag)
 	t_vars	v;
 
 	initialize_parsing(&v);
-	v.mlx = NULL;
+	if (!(v.mlx = mlx_init()))
+		error("Connection between software and display failed", &v, ERROR);
 	check_av(scene_path, save_flag, &v);
 	parse_scene(scene_path, &v);
-	/* initialize_mlx(&v); */
-	/* free_strs(v.map.grid); */
+	v.pixel_put_ft = &bmp_data_pixel_put;
+	v.first_image_colors = malloc(sizeof(t_bmp_color *) * (v.res.y));
+	for (unsigned i = 0; i < v.res.y; i++)
+		v.first_image_colors[i] = malloc(sizeof(t_bmp_color) * (v.res.x));
+	cast_rays(&v);
+	write_bmp(&v);
+	for (unsigned i = 0; i < v.res.y; i++)
+		free(v.first_image_colors[i]);
+	free(v.first_image_colors);
+	free_strs(v.map.grid);
+	mlx_destroy_image(v.mlx, v.textures.east.img.img);
+	mlx_destroy_image(v.mlx, v.textures.west.img.img);
+	mlx_destroy_image(v.mlx, v.textures.north.img.img);
+	mlx_destroy_image(v.mlx, v.textures.sprite.img.img);
+	mlx_destroy_image(v.mlx, v.textures.south.img.img);
+	free(v.mlx);
 }
 
 int			main(int ac, char **av)

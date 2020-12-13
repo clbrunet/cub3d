@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "raycasting.h"
-#include "minilibx.h"
+#include "draw.h"
 
 static void	set_h_first_hit_and_step(t_ray *ray, t_vars const *v)
 {

@@ -20,7 +20,8 @@ SRCS		=	srcs/main.c		\
 				srcs/raycasting/horizontal_hit.c	\
 				srcs/raycasting/vertical_hit.c		\
 				srcs/draw/base.c	\
-				srcs/draw/col.c
+				srcs/draw/col.c		\
+				srcs/draw/bitmap.c
 
 
 OBJS		=	$(SRCS:.c=.o)

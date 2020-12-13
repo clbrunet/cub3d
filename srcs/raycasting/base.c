@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "raycasting.h"
-#include "minilibx.h"
+#include "draw.h"
 
 static void	get_angle_orientation(t_ray *ray)
 {

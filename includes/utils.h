@@ -16,6 +16,8 @@
 # include "defines.h"
 # include "data_structures.h"
 
+void		free_strs(char **strs);
+
 double		deg_to_rad(double angle);
 double		rad_to_deg(double angle);
 double		fix_angle(double angle);
