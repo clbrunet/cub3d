@@ -4,7 +4,7 @@ SO ./textures/nemo.xpm
 
 WE ./textures/crab.xpm
 EA ./textures/jellyfish.xpm
-S ./textures/seashell_pearl.xpm
+S ./textures/octopus.xpm
 
 C 144,202,249  
 F 255,183,77
