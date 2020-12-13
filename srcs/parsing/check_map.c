@@ -48,13 +48,13 @@ void		check_map_chars(t_vars *v)
 				count++;
 			}
 			else if (!ft_strchr(" 012", v->map.grid[i][j]))
-				error("Map contains wrong chars", v, ERROR);
+				error("Map contains wrong chars", v, ERROR, NULL);
 		}
 	}
 	if (count == 0)
-		error("Player missing", v, ERROR);
+		error("Player missing", v, ERROR, NULL);
 	else if (count > 1)
-		error("Multiplayer is not yet available", v, ERROR);
+		error("Multiplayer is not yet available", v, ERROR, NULL);
 }
 
 void		check_map(t_vars *v, int y, int x)
@@ -62,7 +62,7 @@ void		check_map(t_vars *v, int y, int x)
 	if (y - 1 < 0 || !v->map.grid[y + 1] || x - 1 < 0 || !v->map.grid[y][x + 1]
 			|| v->map.grid[y + 1][x] == ' ' || v->map.grid[y - 1][x] == ' '
 			|| v->map.grid[y][x + 1] == ' ' || v->map.grid[y][x - 1] == ' ')
-		error("Map not properly closed", v, ERROR);
+		error("Map not properly closed", v, ERROR, NULL);
 	if (v->map.grid[y][x] == '2')
 		v->map.grid[y][x] = 'S';
 	else

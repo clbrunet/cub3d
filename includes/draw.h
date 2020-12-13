@@ -25,7 +25,8 @@
 # include "defines.h"
 # include "data_structures.h"
 
-void		error(char const *const error_msg, t_vars *v, t_error const error);
+void		error(char const *const error_msg, t_vars *v, t_error const error,
+		void *to_free);
 
 void		mlx_img_pixel_put(t_vars const *v, unsigned const x,
 		unsigned const y, t_color const color);

@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/12 09:33:19 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/13 06:48:26 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/13 10:32:59 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ char			*join_first_image_colors(unsigned size, t_vars const *v)
 	int			i;
 	unsigned	j;
 
-	join = malloc(sizeof(char) * (size));
+	if (!(join = malloc(sizeof(char) * (size))))
+		error("Malloc failed", (t_vars *)v, ERROR, NULL);
 	i = v->res.y - 1;
 	i_join = 0;
 	while (i >= 0)
@@ -67,12 +68,12 @@ int				write_bmp(t_vars const *v)
 
 	if ((fd = open("save.bmp", O_WRONLY | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXU))
 			== -1)
-		error("save.bmp", (t_vars *)v, PERROR);
+		error("save.bmp", (t_vars *)v, PERROR, NULL);
 	size = write_headers(fd, v);
 	pixel_data = join_first_image_colors(size, v);
 	write(fd, pixel_data, size);
 	free(pixel_data);
 	if (close(fd) == -1)
-		error("save.bmp", (t_vars *)v, PERROR);
+		error("save.bmp", (t_vars *)v, PERROR, NULL);
 	return (0);
 }

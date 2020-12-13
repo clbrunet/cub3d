@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "defines.h"
-#include "data_structures.h"
+#include "utils.h"
 
 char	is_in_map(t_vars const *v, int x, int y)
 {

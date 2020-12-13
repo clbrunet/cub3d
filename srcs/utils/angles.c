@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
+#include "utils.h"
 
 double	deg_to_rad(double angle)
 {

@@ -28,3 +28,9 @@ char	*ft_strcpy(char *dst, const char *src)
 	*dst = 0;
 	return ((char *)dst_bp);
 }
+
+int		failed_malloc(void *to_free)
+{
+	free(to_free);
+	return (-1);
+}

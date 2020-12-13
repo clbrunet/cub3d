@@ -6,14 +6,11 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 06:30:52 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/11 12:43:57 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/13 13:24:48 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <math.h>
-
-#include "data_structures.h"
+#include "utils.h"
 
 t_dvector	dvectoradd(t_dvector v1, t_dvector v2)
 {
@@ -39,7 +36,8 @@ double		dist(t_dvector p1, t_dvector p2)
 				+ (p1.y - p2.y) * (p1.y - p2.y)));
 }
 
-double		playerdist_fisheyeless(t_dvector p, double const angle, t_vars *v)
+double		playerdist_fisheyeless(t_dvector p, double const angle,
+		t_vars const *v)
 {
 	return (sqrt(pow(v->player.pos.x - p.x, 2) + pow((v->player.pos.y
 						- p.y), 2)) * cos(fabs(v->player.angle - angle)));

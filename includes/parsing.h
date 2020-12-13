@@ -27,7 +27,8 @@
 # include "data_structures.h"
 # include "defines.h"
 
-void	error(char const *const error_msg, t_vars *v, t_error const error);
+void	error(char const *const error_msg, t_vars *v, t_error const error,
+		void *to_free);
 
 void	parse_elems(char const *const scene_path, int const fd, t_vars *v);
 void	check_elems(t_vars *v);
@@ -38,7 +39,6 @@ void	check_map(t_vars *v, int y, int x);
 void	check_map_chars(t_vars *v);
 
 void	check_av(char const *scene_path, char const *save_flag, t_vars *v);
-void	initialize_parsing(t_vars *v);
 void	parse_scene(char const *const scene_path, t_vars *v);
 
 #endif

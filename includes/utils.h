@@ -6,17 +6,34 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 15:18:14 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/11 17:36:20 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/13 09:27:45 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
 
+# include <X11/X.h>
+# include <stdlib.h>
+# include <math.h>
+
+# include "libft.h"
+# include "mlx.h"
 # include "defines.h"
 # include "data_structures.h"
 
+void		error(char const *const error_msg, t_vars *v, t_error const error,
+		void *to_free);
+int			end(t_vars *v);
+
+void		initialize_parsing(t_vars *v);
+void		initialize_mlx(t_vars *v);
+void		initialize_keys(t_keys *keys);
+
 void		free_strs(char **strs);
+void		destroy_textures(t_vars *v);
+void		free_first_image_colors(t_bmp_color **first_image_colors);
+void		malloc_first_image_colors(t_vars *v);
 
 double		deg_to_rad(double angle);
 double		rad_to_deg(double angle);

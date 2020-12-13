@@ -38,14 +38,11 @@ static int	ft_strdup_continuation_of_line(char *buf, char **line,
 	char	*buf_bp;
 
 	if (!(tmp = malloc((prev_len + 1) * sizeof(char))))
-		return (-1);
+		return (failed_malloc(*line));
 	ft_strcpy(tmp, *line);
 	free(*line);
 	if (!(*line = malloc((prev_len + len + 1) * sizeof(char))))
-	{
-		free(tmp);
-		return (-1);
-	}
+		return (failed_malloc(tmp));
 	i = 0;
 	while (i < prev_len)
 		line[0][i++] = *(tmp++);
@@ -80,7 +77,8 @@ static int	end(int bytes_read, int len, char **line, char *buf)
 		return (-1);
 	else if (!len)
 	{
-		*line = malloc(sizeof(char));
+		if (!(*line = malloc(sizeof(char))))
+			return (-1);
 		line[0][0] = '\0';
 		return (0);
 	}

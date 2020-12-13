@@ -4,6 +4,12 @@
 #include "utils.h"
 #include "draw.h"
 
+void	*malloser(long unsigned size)
+{
+	(void)size;
+	return (NULL);
+}
+
 void	print_res(t_uvector res)
 {
 	printf("----------- RESOLUTION -----------\n\n");

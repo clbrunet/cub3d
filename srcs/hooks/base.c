@@ -16,7 +16,7 @@
 int		keypress_hook(int keycode, t_vars *v)
 {
 	if (keycode == ESC)
-		exit(0);
+		end(v);
 	else if (keycode == LEFT)
 		v->keys.left = 1;
 	else if (keycode == RIGHT)
@@ -78,14 +78,4 @@ int		loop_hook(t_vars *v)
 	cast_rays(v);
 	mlx_put_image_to_window(v->mlx, v->win, v->img.img, 0, 0);
 	return (0);
-}
-
-void	initialize_keys(t_keys *keys)
-{
-	keys->left = 0;
-	keys->right = 0;
-	keys->z = 0;
-	keys->q = 0;
-	keys->s = 0;
-	keys->d = 0;
 }

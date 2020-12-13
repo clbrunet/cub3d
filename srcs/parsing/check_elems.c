@@ -15,19 +15,19 @@
 void	check_elems(t_vars *v)
 {
 	if (v->res.x == 0)
-		error("Resolution missing", v, ERROR);
+		error("Resolution missing", v, ERROR, NULL);
 	else if (!v->textures.north.width)
-		error("North texture missing", v, ERROR);
+		error("North texture missing", v, ERROR, NULL);
 	else if (!v->textures.south.width)
-		error("South texture missing", v, ERROR);
+		error("South texture missing", v, ERROR, NULL);
 	else if (!v->textures.west.width)
-		error("West texture missing", v, ERROR);
+		error("West texture missing", v, ERROR, NULL);
 	else if (!v->textures.east.width)
-		error("East texture missing", v, ERROR);
+		error("East texture missing", v, ERROR, NULL);
 	else if (!v->textures.sprite.width)
-		error("Sprite texture missing", v, ERROR);
+		error("Sprite texture missing", v, ERROR, NULL);
 	else if (v->colors.floor.full == (unsigned)-1)
-		error("Floor color missing", v, ERROR);
+		error("Floor color missing", v, ERROR, NULL);
 	else if (v->colors.ceilling.full == (unsigned)-1)
-		error("Ceilling color missing", v, ERROR);
+		error("Ceilling color missing", v, ERROR, NULL);
 }

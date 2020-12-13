@@ -22,7 +22,7 @@ static void		strsadd_back(char ***strs_ptr, unsigned len, char *new,
 	if (!(tmp = malloc(sizeof(char *) * (len + 1))))
 	{
 		free(new);
-		error("Malloc failed", v, ERROR);
+		error("Malloc failed", v, ERROR, NULL);
 	}
 	j = 0;
 	while (j < len - 1)
@@ -67,7 +67,7 @@ static void		addspaces(t_vars *v, char const ***strs_ptr)
 		if (len < max)
 		{
 			if (!(tmp = malloc(sizeof(char) * (max + 1))))
-				error("Malloc failed", v, ERROR);
+				error("Malloc failed", v, ERROR, NULL);
 			ft_strcpy(tmp, (*strs_ptr)[i]);
 			free((void *)(*strs_ptr)[i]);
 			while (len < max)
@@ -93,24 +93,25 @@ void			parse_map(char const *const scene_path, int const fd,
 	char		*line;
 	unsigned	i;
 
-	i = 1;
-	while ((ret = get_next_line(fd, &line)) != -1)
+	i = 0;
+	while ((ret = get_next_line(fd, &line)) >= 0)
 	{
 		if (!*line)
 		{
 			free(line);
 			if (!ret)
 				break ;
-			else if (i == 1)
+			else if (i == 0)
 				continue ;
 			else
-				error("Empty line in map", v, ERROR);
+				error("Map empty line, or too many elements", v, ERROR, NULL);
 		}
-		strsadd_back(&map->grid, i, line, v);
-		i++;
+		strsadd_back(&map->grid, ++i, line, v);
 	}
 	if (ret == -1)
-		error(scene_path, v, PERROR);
+		error(scene_path, v, PERROR, NULL);
+	else if (ret == -2)
+		error("Malloc failed", v, ERROR, NULL);
 	addspaces(v, (char const ***)&map->grid);
 	set_map_props(map);
 }

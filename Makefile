@@ -4,6 +4,7 @@ SRCS		=	srcs/main.c		\
 				srcs/debug.c	\
 				srcs/get_next_line/get_next_line.c			\
 				srcs/get_next_line/get_next_line_utils.c	\
+				srcs/utils/initialize.c		\
 				srcs/utils/free.c			\
 				srcs/utils/ft_atoitrim.c	\
 				srcs/utils/angles.c			\
@@ -29,7 +30,7 @@ OBJS		=	$(SRCS:.c=.o)
 LIBFT		=	libft/libft.a
 LIBMLX		=	minilibx_linux/libmlx.a
 
-LIBSFLAGS	=	$(LIBFT) $(LIBMLX) -lXext -lX11 -lbsd -lm
+LIBSFLAGS	=	$(LIBFT) $(LIBMLX) -lXext -lX11 -lm
 
 
 CC			=	gcc
