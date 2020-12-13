@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/29 07:21:52 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/11 17:34:22 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/12 18:45:43 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,38 @@ typedef enum	e_orientation
 	EAST
 }				t_orientation;
 
+typedef struct	s_argb
+{
+	unsigned char	blue;
+	unsigned char	green;
+	unsigned char	red;
+	unsigned char	alpha;
+}				t_argb;
+
 typedef union	u_color
 {
-	unsigned		full;
-	unsigned char	bytes[4];
+	unsigned	full;
+	t_argb		bytes;
 }				t_color;
+
+typedef struct	s_bgr
+{
+	unsigned char	blue;
+	unsigned char	green;
+	unsigned char	red;
+}				t_bgr;
+
+typedef union	u_bmp_color
+{
+	unsigned char	str[3];
+	t_bgr			bgr;
+}				t_bmp_color;
+
+typedef union	u_bmp_field
+{
+	unsigned		full;
+	unsigned char	str[4];
+}				t_bmp_field;
 
 typedef struct	s_dvector
 {
@@ -131,10 +158,15 @@ typedef struct	s_ray
 	double			wall_dist;
 }				t_ray;
 
-typedef struct	s_vars
+typedef struct s_vars	t_vars;
+
+struct			s_vars
 {
 	void		*mlx;
 	void		*win;
+	void		(*pixel_put_ft)(t_vars const *v, unsigned const x,
+			unsigned const y, t_color const color);
+	t_bmp_color	**first_image_colors;
 	t_img_data	img;
 	t_uvector	res;
 	t_textures	textures;
@@ -143,6 +175,6 @@ typedef struct	s_vars
 	t_player	player;
 	double		project_dist;
 	t_keys		keys;
-}				t_vars;
+};
 
 #endif

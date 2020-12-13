@@ -52,24 +52,24 @@ static void	parse_texture(char const *line, t_texture *texture, t_vars *v)
 static void	parse_color(char const *line, t_color *color_ptr, t_vars *v)
 {
 	ft_trimspaces(&line);
-	color_ptr->bytes[3] = 0;
+	color_ptr->bytes.alpha = 0;
 	if (!ft_isdigit(*line))
 		error("Wrong colors infos", v, ERROR);
-	color_ptr->bytes[2] = ft_atoitrim(&line);
+	color_ptr->bytes.red = ft_atoitrim(&line);
 	if (*line == ',')
 		line++;
 	else
 		error("Wrong colors infos", v, ERROR);
 	if (!ft_isdigit(*line))
 		error("Wrong colors infos", v, ERROR);
-	color_ptr->bytes[1] = ft_atoitrim(&line);
+	color_ptr->bytes.green = ft_atoitrim(&line);
 	if (*line == ',')
 		line++;
 	else
 		error("Wrong colors infos", v, ERROR);
 	if (!ft_isdigit(*line))
 		error("Wrong colors infos", v, ERROR);
-	color_ptr->bytes[0] = ft_atoitrim(&line);
+	color_ptr->bytes.blue = ft_atoitrim(&line);
 	ft_trimspaces(&line);
 	if (*line)
 		error("Wrong colors infos", v, ERROR);

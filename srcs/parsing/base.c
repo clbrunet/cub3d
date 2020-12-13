@@ -54,4 +54,6 @@ void	parse_scene(char const *const scene_path, t_vars *v)
 	check_map(v, (int)v->player.pos.y >> BLOCK_SIZE_BIT,
 			(int)v->player.pos.x >> BLOCK_SIZE_BIT);
 	v->project_dist = ((double)v->res.x / 2) / tan(v->player.fov / 2);
+	if (close(fd) == -1)
+		error(scene_path, v, PERROR);
 }

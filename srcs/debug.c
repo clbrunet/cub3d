@@ -77,7 +77,7 @@ void	print_keys(t_keys *keys)
 	printf("d: %i\n", keys->d);
 }
 
-void	draw_rect(t_vars *v, int tlx, int tly, int brx, int bry, int color)
+void	draw_rect(t_vars *v, int tlx, int tly, int brx, int bry, t_color color)
 {
 	int		bp;
 
@@ -99,6 +99,12 @@ void	draw_minimap(t_vars *v)
 {
 	int		i;
 	int		j;
+	t_color	black = {0};
+	t_color sand = {0x00ffb74d};
+	t_color white = {WHITE};
+	t_color blue = {BLUE};
+	t_color green = {GREEN};
+	t_color red = {RED};
 
 	i = 0;
 	while (i < v->map.max.y * BLOCK_SIZE * v->map.minimap_factor)
@@ -109,17 +115,17 @@ void	draw_minimap(t_vars *v)
 			if (v->map.grid
 					[(int)((double)i / v->map.minimap_factor) >> BLOCK_SIZE_BIT]
 					[(int)(j / v->map.minimap_factor) >> BLOCK_SIZE_BIT] == '1')
-				mlx_img_pixel_put(v, j, i, WHITE);
+				mlx_img_pixel_put(v, j, i, white);
 			else if (v->map.grid
 					[(int)((double)i / v->map.minimap_factor) >> BLOCK_SIZE_BIT]
 					[(int)(j / v->map.minimap_factor) >> BLOCK_SIZE_BIT] == 'S')
-				mlx_img_pixel_put(v, j, i, BLUE);
+				mlx_img_pixel_put(v, j, i, blue);
 			else if (j % (int)round(BLOCK_SIZE * v->map.minimap_factor)
 					&& i % (int)round(BLOCK_SIZE
 						*v->map.minimap_factor))
-				mlx_img_pixel_put(v, j, i, 0x00ffb74d);
+				mlx_img_pixel_put(v, j, i, sand);
 			else
-				mlx_img_pixel_put(v, j, i, 0);
+				mlx_img_pixel_put(v, j, i, black);
 
 			j++;
 		}
@@ -128,7 +134,7 @@ void	draw_minimap(t_vars *v)
 	draw_rect(v, v->player.pos.x * v->map.minimap_factor - 10,
 			v->player.pos.y * v->map.minimap_factor - 10,
 			v->player.pos.x * v->map.minimap_factor + 10,
-			v->player.pos.y * v->map.minimap_factor + 10, GREEN);
+			v->player.pos.y * v->map.minimap_factor + 10, green);
 	double newx = v->player.pos.x + cos(v->player.angle) * 10;
 	double newy = v->player.pos.y - sin(v->player.angle) * 10;
 	for (int c = 0; c < 100; c++)
@@ -136,7 +142,7 @@ void	draw_minimap(t_vars *v)
 		draw_rect(v, newx * v->map.minimap_factor - 1,
 				newy * v->map.minimap_factor - 1,
 				newx * v->map.minimap_factor + 1,
-				newy * v->map.minimap_factor + 1, RED);
+				newy * v->map.minimap_factor + 1, red);
 		newx = newx + cos(v->player.angle) * 10;
 		newy = newy - sin(v->player.angle) * 10;
 	}
@@ -147,7 +153,7 @@ void	draw_minimap(t_vars *v)
 		draw_rect(v, newx * v->map.minimap_factor - 1,
 				newy * v->map.minimap_factor - 1,
 				newx * v->map.minimap_factor + 1,
-				newy * v->map.minimap_factor + 1, RED);
+				newy * v->map.minimap_factor + 1, red);
 		newx = newx + cos(v->player.angle + deg_to_rad(30)) * 10;
 		newy = newy - sin(v->player.angle + deg_to_rad(30)) * 10;
 	}
@@ -158,7 +164,7 @@ void	draw_minimap(t_vars *v)
 		draw_rect(v, newx * v->map.minimap_factor - 1,
 				newy * v->map.minimap_factor - 1,
 				newx * v->map.minimap_factor + 1,
-				newy * v->map.minimap_factor + 1, RED);
+				newy * v->map.minimap_factor + 1, red);
 		newx = newx + cos(v->player.angle - deg_to_rad(30)) * 10;
 		newy = newy - sin(v->player.angle - deg_to_rad(30)) * 10;
 	}
