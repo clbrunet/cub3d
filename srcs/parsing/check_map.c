@@ -15,8 +15,8 @@
 static void	set_player_props(t_vars *v, char c, int y, int x)
 {
 	v->player.fov = M_PI / 3;
-	v->player.height = BLOCK_SIZE / 2;
-	v->player.speed = (double)(v->res.x * v->res.y) / 128000;
+	v->player.height = v->res.y / 2;
+	v->player.speed = (double)(v->res.x * v->res.y) / 96000;
 	v->player.pos.x = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * x;
 	v->player.pos.y = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * y;
 	if (c == 'N')

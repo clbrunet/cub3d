@@ -34,18 +34,17 @@ void	print_textures(t_textures textures)
 	/* printf("S  : |%s|\n", textures.sprite); */
 }
 
-void	print_colors(t_colors colors)
-{
-	printf("\n------------- COLORS -------------\n\n");
-	printf("F full : %#.8X, %u\n", colors.floor.full, colors.floor.full);
-	printf("C full : %#.8X, %u\n", colors.ceilling.full, colors.ceilling.full);
-}
+/* void	print_colors(t_colors colors) */
+/* { */
+/* 	printf("\n------------- COLORS -------------\n\n"); */
+/* 	printf("F full : %#.8X, %u\n", colors.floor.full, colors.floor.full); */
+/* 	printf("C full : %#.8X, %u\n", colors.ceilling.full, colors.ceilling.full); */
+/* } */
 
 void	print_elems(t_vars *v)
 {
 	print_res(v->res);
 	print_textures(v->textures);
-	print_colors(v->colors);
 }
 
 void	print_map(char **map)
@@ -60,15 +59,14 @@ void	print_map(char **map)
 	printf("|%s|\n", map[i]);
 }
 
-void	print_player(t_player *player)
+void	print_player(t_vars *v)
 {
 	printf("\n------------- PLAYER -------------\n\n");
-	printf("Pos : X: %f, Y: %f\n", player->pos.x, player->pos.y);
-	printf("Grid pos : X: %i, Y: %i\n", (int)player->pos.x / BLOCK_SIZE, (int)player->pos.y / BLOCK_SIZE);
-	/* printf("Pos : X: %f, Y: %f\n", player->pos.x, player->pos.y); */
-	/* printf("Grid pos : X: %i, Y: %i\n", (int)player->pos.x / BLOCK_SIZE, (int)player->pos.y / BLOCK_SIZE); */
-	printf("Angle : %f\n", player->angle);
-	printf("Height : %2i\n", player->height);
+	printf("Pos : X: %f, Y: %f\n", v->player.pos.x, v->player.pos.y);
+	printf("Grid pos : X: %i, Y: %i\n", (int)v->player.pos.x / BLOCK_SIZE, (int)v->player.pos.y / BLOCK_SIZE);
+	printf("Speed : %f\n", v->player.speed);
+	printf("Angle : %f\n", v->player.angle);
+	printf("Height : %2i\n", v->player.height);
 	/* printf("FOV : %3i\n", player->fov); */
 }
 

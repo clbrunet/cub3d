@@ -6,10 +6,11 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 13:19:51 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/13 13:27:06 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/13 18:00:32 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "data_structures.h"
 #include "utils.h"
 #include "hooks.h"
 
@@ -23,8 +24,8 @@ void	initialize_parsing(t_vars *v)
 	v->textures.west.width = 0;
 	v->textures.east.width = 0;
 	v->textures.sprite.width = 0;
-	v->colors.ceilling.full = (unsigned)-1;
-	v->colors.floor.full = (unsigned)-1;
+	v->textures.floor.width = 0;
+	v->textures.ceilling.width = 0;
 	v->map.grid = NULL;
 	v->first_image_colors = NULL;
 	v->win = NULL;
@@ -56,4 +57,8 @@ void	initialize_keys(t_keys *keys)
 	keys->q = 0;
 	keys->s = 0;
 	keys->d = 0;
+	keys->lshift = 0;
+	keys->up = 0;
+	keys->down = 0;
+	keys->lctrl = 0;
 }

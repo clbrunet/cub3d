@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 13:40:27 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/11 14:41:54 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/14 18:19:30 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,12 @@ void		display_v_wall(t_ray *ray, t_vars const *v)
 	if (ray->orientation[1] == WEST)
 	{
 		ray->v_hit.offset = abs((int)ray->v_hit.offset - (BLOCK_SIZE - 1));
-		draw_col(ray->col, &ray->v_hit, &v->textures.west, v);
+		draw_wall(ray->col, &ray->v_hit, &v->textures.west, v);
 	}
 	else
-		draw_col(ray->col, &ray->v_hit, &v->textures.east, v);
+		draw_wall(ray->col, &ray->v_hit, &v->textures.east, v);
+	draw_floor(ray, &ray->v_hit, v);
+	draw_ceilling(ray, &ray->v_hit, v);
 }
 
 static char	check_in_v_sprite_width(t_ray *ray, t_vars const *v)

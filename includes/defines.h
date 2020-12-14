@@ -27,7 +27,10 @@
 # define S 115
 # define D 100
 # define ESC 65307
-# define SHIFT 65505
+# define LSHIFT 65505
+# define UP 65362
+# define DOWN 65364
+# define LCTRL 65507
 
 # define BLACK	0x00000000
 # define WHITE	0x00FFFFFF

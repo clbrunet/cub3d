@@ -25,7 +25,9 @@ void	one_axis_movements(t_vars *v);
 char	two_axis_movements(t_vars *v);
 
 int		keypress_hook(int keycode, t_vars *v);
+int		keypress_hook2(int keycode, t_vars *v);
 int		keyrelease_hook(int keycode, t_vars *v);
+int		keyrelease_hook2(int keycode, t_vars *v);
 int		loop_hook(t_vars *v);
 
 #endif

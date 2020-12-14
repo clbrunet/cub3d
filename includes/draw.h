@@ -28,14 +28,20 @@
 void		error(char const *const error_msg, t_vars *v, t_error const error,
 		void *to_free);
 
+t_color		fog(t_color color, double distance);
 void		mlx_img_pixel_put(t_vars const *v, unsigned const x,
 		unsigned const y, t_color const color);
 void		bmp_data_pixel_put(t_vars const *v, unsigned const x,
 		unsigned const y, t_color const color);
-unsigned	mlx_img_pixel_get_value(t_img_data img_data, int x, int y);
+unsigned	mlx_img_pixel_get_value(t_img_data const *img_data, int x, int y);
+void		mlx_clear_img(t_vars *v, int x, int y);
 
-void		draw_col(unsigned const col, t_hit const *hit,
+void	draw_wall(unsigned const col, t_hit const *hit,
 		t_texture const *texture, t_vars const *v);
+void	draw_sprite(unsigned const col, t_hit const *hit,
+		t_texture const *texture, t_vars const *v);
+void	draw_floor(t_ray const *ray, t_hit const *hit, t_vars const *v);
+void	draw_ceilling(t_ray const *ray, t_hit const *hit, t_vars const *v);
 
 int			write_bmp(t_vars const *v);
 

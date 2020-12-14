@@ -50,32 +50,32 @@ static void	parse_texture(void *to_free, char const *line, t_texture *texture,
 			&texture->img.endian);
 }
 
-static void	parse_color(void *to_free, char const *line, t_color *color_ptr,
-		t_vars *v)
-{
-	ft_trimspaces(&line);
-	color_ptr->bytes.alpha = 0;
-	if (!ft_isdigit(*line))
-		error("Wrong colors infos", v, ERROR, to_free);
-	color_ptr->bytes.red = ft_atoitrim(&line);
-	if (*line == ',')
-		line++;
-	else
-		error("Wrong colors infos", v, ERROR, to_free);
-	if (!ft_isdigit(*line))
-		error("Wrong colors infos", v, ERROR, to_free);
-	color_ptr->bytes.green = ft_atoitrim(&line);
-	if (*line == ',')
-		line++;
-	else
-		error("Wrong colors infos", v, ERROR, to_free);
-	if (!ft_isdigit(*line))
-		error("Wrong colors infos", v, ERROR, to_free);
-	color_ptr->bytes.blue = ft_atoitrim(&line);
-	ft_trimspaces(&line);
-	if (*line)
-		error("Wrong colors infos", v, ERROR, to_free);
-}
+/* static void	parse_color(void *to_free, char const *line, t_color *color_ptr, */
+/* 		t_vars *v) */
+/* { */
+/* 	ft_trimspaces(&line); */
+/* 	color_ptr->bytes.alpha = 0; */
+/* 	if (!ft_isdigit(*line)) */
+/* 		error("Wrong colors infos", v, ERROR, to_free); */
+/* 	color_ptr->bytes.red = ft_atoitrim(&line); */
+/* 	if (*line == ',') */
+/* 		line++; */
+/* 	else */
+/* 		error("Wrong colors infos", v, ERROR, to_free); */
+/* 	if (!ft_isdigit(*line)) */
+/* 		error("Wrong colors infos", v, ERROR, to_free); */
+/* 	color_ptr->bytes.green = ft_atoitrim(&line); */
+/* 	if (*line == ',') */
+/* 		line++; */
+/* 	else */
+/* 		error("Wrong colors infos", v, ERROR, to_free); */
+/* 	if (!ft_isdigit(*line)) */
+/* 		error("Wrong colors infos", v, ERROR, to_free); */
+/* 	color_ptr->bytes.blue = ft_atoitrim(&line); */
+/* 	ft_trimspaces(&line); */
+/* 	if (*line) */
+/* 		error("Wrong colors infos", v, ERROR, to_free); */
+/* } */
 
 static void	parse_elem(char const *line, t_vars *v)
 {
@@ -92,9 +92,9 @@ static void	parse_elem(char const *line, t_vars *v)
 	else if (line[0] == 'S' && (line[1] == ' ' || !line[1]))
 		parse_texture((void *)line, line + 1, &v->textures.sprite, v);
 	else if (line[0] == 'F' && (line[1] == ' ' || !line[1]))
-		parse_color((void *)line, line + 1, &v->colors.floor, v);
+		parse_texture((void *)line, line + 1, &v->textures.floor, v);
 	else if (line[0] == 'C' && (line[1] == ' ' || !line[1]))
-		parse_color((void *)line, line + 1, &v->colors.ceilling, v);
+		parse_texture((void *)line, line + 1, &v->textures.ceilling, v);
 	else
 		error("Wrong element, or missing element", v, ERROR, (void *)line);
 }

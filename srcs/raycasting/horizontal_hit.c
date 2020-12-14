@@ -67,10 +67,12 @@ void		display_h_wall(t_ray *ray, t_vars const *v)
 	if (ray->orientation[0] == SOUTH)
 	{
 		ray->h_hit.offset = abs((int)ray->h_hit.offset - (BLOCK_SIZE - 1));
-		draw_col(ray->col, &ray->h_hit, &v->textures.south, v);
+		draw_wall(ray->col, &ray->h_hit, &v->textures.south, v);
 	}
 	else
-		draw_col(ray->col, &ray->h_hit, &v->textures.north, v);
+		draw_wall(ray->col, &ray->h_hit, &v->textures.north, v);
+	draw_floor(ray, &ray->h_hit, v);
+	draw_ceilling(ray, &ray->h_hit, v);
 }
 
 static char	check_in_h_sprite_width(t_ray *ray, t_vars const *v)

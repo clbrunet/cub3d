@@ -35,10 +35,14 @@ void	destroy_textures(t_vars *v)
 		mlx_destroy_image(v->mlx, v->textures.west.img.img);
 	if (v->textures.north.width)
 		mlx_destroy_image(v->mlx, v->textures.north.img.img);
-	if (v->textures.sprite.width)
-		mlx_destroy_image(v->mlx, v->textures.sprite.img.img);
 	if (v->textures.south.width)
 		mlx_destroy_image(v->mlx, v->textures.south.img.img);
+	if (v->textures.sprite.width)
+		mlx_destroy_image(v->mlx, v->textures.sprite.img.img);
+	if (v->textures.floor.width)
+		mlx_destroy_image(v->mlx, v->textures.floor.img.img);
+	if (v->textures.ceilling.width)
+		mlx_destroy_image(v->mlx, v->textures.ceilling.img.img);
 }
 
 void	free_first_image_colors(t_bmp_color **first_image_colors)

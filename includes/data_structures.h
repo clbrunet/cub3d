@@ -101,13 +101,9 @@ typedef struct	s_textures
 	t_texture	west;
 	t_texture	east;
 	t_texture	sprite;
+	t_texture	floor;
+	t_texture	ceilling;
 }				t_textures;
-
-typedef struct	s_colors
-{
-	t_color		floor;
-	t_color		ceilling;
-}				t_colors;
 
 typedef struct	s_player
 {
@@ -133,7 +129,10 @@ typedef struct	s_keys
 	char	q;
 	char	s;
 	char	d;
-	char	shift;
+	char	lshift;
+	char	up;
+	char	down;
+	char	lctrl;
 }				t_keys;
 
 typedef struct	s_hit
@@ -170,7 +169,6 @@ struct			s_vars
 	t_img_data	img;
 	t_uvector	res;
 	t_textures	textures;
-	t_colors	colors;
 	t_map		map;
 	t_player	player;
 	double		project_dist;

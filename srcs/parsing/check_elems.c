@@ -26,8 +26,8 @@ void	check_elems(t_vars *v)
 		error("East texture missing", v, ERROR, NULL);
 	else if (!v->textures.sprite.width)
 		error("Sprite texture missing", v, ERROR, NULL);
-	else if (v->colors.floor.full == (unsigned)-1)
-		error("Floor color missing", v, ERROR, NULL);
-	else if (v->colors.ceilling.full == (unsigned)-1)
-		error("Ceilling color missing", v, ERROR, NULL);
+	else if (!v->textures.floor.width)
+		error("Floor texture missing", v, ERROR, NULL);
+	else if (!v->textures.ceilling.width)
+		error("Ceilling texture missing", v, ERROR, NULL);
 }
