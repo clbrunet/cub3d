@@ -18,7 +18,7 @@ static int	ft_strdup_start_of_line(char *buf, char **line, int len)
 	char	*buf_bp;
 
 	if (!(*line = malloc((len + 1) * sizeof(char))))
-		return (-1);
+		return (-2);
 	buf_bp = buf;
 	i = 0;
 	while (i < len)
@@ -78,7 +78,7 @@ static int	end(int bytes_read, int len, char **line, char *buf)
 	else if (!len)
 	{
 		if (!(*line = malloc(sizeof(char))))
-			return (-1);
+			return (-2);
 		line[0][0] = '\0';
 		return (0);
 	}
@@ -107,6 +107,8 @@ int			get_next_line(int fd, char **line)
 		{
 			if (len == -1)
 				return (-1);
+			else if (len == -2)
+				return (-2);
 			return (1);
 		}
 		have_to_read = 1;

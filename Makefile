@@ -53,22 +53,15 @@ $(NAME)		:	$(LIBFT) $(LIBMLX) $(OBJS)
 
 bonus		:	$(NAME)
 
-cl			:
-				rm -f $(OBJS)
 clean		:
 				make clean -C libft/
 				make clean -C minilibx_linux/
 				rm -f $(OBJS)
 
-fcl			:	cl
-				rm -f $(NAME)
-
 fclean		:	clean
 				make fclean -C libft/
 				rm -f $(NAME)
 
-r			:	fcl all
-
 re			:	fclean all
 
-.PHONY		:	all clean fclean re
+.PHONY		:	all clean fclean re bonus

@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/13 13:19:51 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/15 11:14:58 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/15 17:01:55 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,19 @@ void	initialize_keys(t_keys *keys)
 	keys->down = 0;
 	keys->lctrl = 0;
 	keys->f = 0;
+}
+
+void	malloc_first_image_colors(t_vars *v)
+{
+	unsigned	i;
+
+	if (!(v->first_image_colors = malloc(sizeof(char)
+					* (1 + 3 * v->res.x * v->res.y))))
+		error("Malloc failed", v, ERROR, NULL);
+	i = 0;
+	while (i < v->res.y)
+		if (!(v->first_image_colors[i++] = malloc(sizeof(t_bmp_color)
+						* (v->res.x))))
+			error("Malloc failed", v, ERROR, NULL);
+	v->first_image_colors[i] = NULL;
 }

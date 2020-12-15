@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/19 15:30:55 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/11/19 15:30:55 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/15 16:49:21 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,5 @@ char	*ft_strcpy(char *dst, const char *src)
 int		failed_malloc(void *to_free)
 {
 	free(to_free);
-	return (-1);
+	return (-2);
 }
