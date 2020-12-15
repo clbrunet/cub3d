@@ -38,10 +38,11 @@ void		mlx_clear_img(t_vars *v, int x, int y);
 
 void	draw_wall(unsigned const col, t_hit const *hit,
 		t_texture const *texture, t_vars const *v);
-void	draw_sprite(unsigned const col, t_hit const *hit,
-		t_texture const *texture, t_vars const *v);
+void	draw_sprite(unsigned const col, t_hit const *hit, t_vars const *v);
 void	draw_floor(t_ray const *ray, t_hit const *hit, t_vars const *v);
 void	draw_ceilling(t_ray const *ray, t_hit const *hit, t_vars const *v);
+
+void	draw_hud(t_vars const *v);
 
 int			write_bmp(t_vars const *v);
 

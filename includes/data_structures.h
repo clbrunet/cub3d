@@ -100,9 +100,12 @@ typedef struct	s_textures
 	t_texture	south;
 	t_texture	west;
 	t_texture	east;
-	t_texture	sprite;
+	t_texture	monster;
+	t_texture	regeneration;
+	t_texture	health;
 	t_texture	floor;
 	t_texture	ceilling;
+	t_texture	weapon[6];
 }				t_textures;
 
 typedef struct	s_player
@@ -112,6 +115,7 @@ typedef struct	s_player
 	double		fov;
 	double		speed;
 	unsigned	height;
+	unsigned	health;
 }				t_player;
 
 typedef struct	s_map
@@ -133,6 +137,7 @@ typedef struct	s_keys
 	char	up;
 	char	down;
 	char	lctrl;
+	char	f;
 }				t_keys;
 
 typedef struct	s_hit
@@ -141,6 +146,7 @@ typedef struct	s_hit
 	double		distance;
 	unsigned	height;
 	unsigned	offset;
+	char		map_char;
 }				t_hit;
 
 typedef struct	s_ray
@@ -173,6 +179,7 @@ struct			s_vars
 	t_player	player;
 	double		project_dist;
 	t_keys		keys;
+	double		weapon_state;
 };
 
 #endif

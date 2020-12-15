@@ -81,7 +81,7 @@ void	print_keys(t_keys *keys)
 	printf("d: %i\n", keys->d);
 }
 
-void	draw_rect(t_vars *v, int tlx, int tly, int brx, int bry, t_color color)
+void	draw_rect(t_vars const *v, int tlx, int tly, int brx, int bry, t_color color)
 {
 	int		bp;
 
@@ -92,7 +92,7 @@ void	draw_rect(t_vars *v, int tlx, int tly, int brx, int bry, t_color color)
 		while (tlx <= brx)
 		{
 			if (tly > 0)
-				mlx_img_pixel_put(v, tlx, tly, color);
+				(*v->pixel_put_ft)(v, tlx, tly, color);
 			tlx++;
 		}
 		tly++;

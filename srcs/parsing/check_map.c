@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 13:15:10 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/11 12:14:08 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/15 09:48:33 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static void	set_player_props(t_vars *v, char c, int y, int x)
 	v->player.speed = (double)(v->res.x * v->res.y) / 96000;
 	v->player.pos.x = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * x;
 	v->player.pos.y = (double)BLOCK_SIZE / 2 + BLOCK_SIZE * y;
+	v->player.health = 5;
 	if (c == 'N')
 		v->player.angle = M_PI_2;
 	else if (c == 'S')
@@ -47,7 +48,7 @@ void		check_map_chars(t_vars *v)
 				set_player_props(v, v->map.grid[i][j], i, j);
 				count++;
 			}
-			else if (!ft_strchr(" 012", v->map.grid[i][j]))
+			else if (!ft_strchr(" 01HM", v->map.grid[i][j]))
 				error("Map contains wrong chars", v, ERROR, NULL);
 		}
 	}
@@ -63,16 +64,22 @@ void		check_map(t_vars *v, int y, int x)
 			|| v->map.grid[y + 1][x] == ' ' || v->map.grid[y - 1][x] == ' '
 			|| v->map.grid[y][x + 1] == ' ' || v->map.grid[y][x - 1] == ' ')
 		error("Map not properly closed", v, ERROR, NULL);
-	if (v->map.grid[y][x] == '2')
-		v->map.grid[y][x] = 'S';
+	if (v->map.grid[y][x] == 'H')
+		v->map.grid[y][x] = 'h';
+	else if (v->map.grid[y][x] == 'M')
+		v->map.grid[y][x] = 'm';
 	else
-		v->map.grid[y][x] = 'E';
-	if (v->map.grid[y + 1][x] == '0' || v->map.grid[y + 1][x] == '2')
+		v->map.grid[y][x] = 'e';
+	if (v->map.grid[y + 1][x] == '0' || v->map.grid[y + 1][x] == 'H'
+			 || v->map.grid[y + 1][x] == 'M')
 		check_map(v, y + 1, x);
-	if (v->map.grid[y - 1][x] == '0' || v->map.grid[y - 1][x] == '2')
+	if (v->map.grid[y - 1][x] == '0' || v->map.grid[y - 1][x] == 'H'
+			 || v->map.grid[y - 1][x] == 'M')
 		check_map(v, y - 1, x);
-	if (v->map.grid[y][x + 1] == '0' || v->map.grid[y][x + 1] == '2')
+	if (v->map.grid[y][x + 1] == '0' || v->map.grid[y][x + 1] == 'H'
+			 || v->map.grid[y][x + 1] == 'M')
 		check_map(v, y, x + 1);
-	if (v->map.grid[y][x - 1] == '0' || v->map.grid[y][x - 1] == '2')
+	if (v->map.grid[y][x - 1] == '0' || v->map.grid[y][x - 1] == 'H'
+			 || v->map.grid[y][x - 1] == 'M')
 		check_map(v, y, x - 1);
 }

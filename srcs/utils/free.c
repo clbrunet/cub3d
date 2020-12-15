@@ -37,12 +37,22 @@ void	destroy_textures(t_vars *v)
 		mlx_destroy_image(v->mlx, v->textures.north.img.img);
 	if (v->textures.south.width)
 		mlx_destroy_image(v->mlx, v->textures.south.img.img);
-	if (v->textures.sprite.width)
-		mlx_destroy_image(v->mlx, v->textures.sprite.img.img);
+	if (v->textures.regeneration.width)
+		mlx_destroy_image(v->mlx, v->textures.regeneration.img.img);
+	if (v->textures.health.width)
+		mlx_destroy_image(v->mlx, v->textures.health.img.img);
+	if (v->textures.monster.width)
+		mlx_destroy_image(v->mlx, v->textures.monster.img.img);
 	if (v->textures.floor.width)
 		mlx_destroy_image(v->mlx, v->textures.floor.img.img);
 	if (v->textures.ceilling.width)
 		mlx_destroy_image(v->mlx, v->textures.ceilling.img.img);
+	mlx_destroy_image(v->mlx, v->textures.weapon[0].img.img);
+	mlx_destroy_image(v->mlx, v->textures.weapon[1].img.img);
+	mlx_destroy_image(v->mlx, v->textures.weapon[2].img.img);
+	mlx_destroy_image(v->mlx, v->textures.weapon[3].img.img);
+	mlx_destroy_image(v->mlx, v->textures.weapon[4].img.img);
+	mlx_destroy_image(v->mlx, v->textures.weapon[5].img.img);
 }
 
 void	free_first_image_colors(t_bmp_color **first_image_colors)

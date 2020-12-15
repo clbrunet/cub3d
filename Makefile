@@ -20,9 +20,11 @@ SRCS		=	srcs/main.c		\
 				srcs/raycasting/base.c				\
 				srcs/raycasting/horizontal_hit.c	\
 				srcs/raycasting/vertical_hit.c		\
+				srcs/raycasting/monster.c			\
 				srcs/draw/base.c	\
 				srcs/draw/col.c		\
-				srcs/draw/bitmap.c
+				srcs/draw/bitmap.c	\
+				srcs/draw/hud.c
 
 
 OBJS		=	$(SRCS:.c=.o)
@@ -34,7 +36,9 @@ LIBSFLAGS	=	$(LIBFT) $(LIBMLX) -lXext -lX11 -lm
 
 
 CC			=	gcc
-CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address \
+# CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address \
+				-I./libft/ -I./minilibx_linux/ -I./includes/
+CFLAGS		=	-Wall -Wextra -Werror -O3 \
 				-I./libft/ -I./minilibx_linux/ -I./includes/
 
 all			:	$(NAME)

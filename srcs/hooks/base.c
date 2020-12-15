@@ -56,6 +56,8 @@ int		keypress_hook2(int keycode, t_vars *v)
 		}
 		v->keys.lctrl = 1;
 	}
+	else if (keycode == F)
+		v->keys.f = 1;
 	return (0);
 }
 
@@ -93,6 +95,8 @@ int		keyrelease_hook2(int keycode, t_vars *v)
 		v->player.speed *= 2;
 		v->keys.lctrl = 0;
 	}
+	else if (keycode == F)
+		v->keys.f = 0;
 	return (0);
 }
 
@@ -112,12 +116,21 @@ void	update(t_vars *v)
 			v->player.height -= v->player.speed;
 	if (!two_axis_movements(v))
 		one_axis_movements(v);
+	if (v->weapon_state > 0.2 || v->keys.f)
+	{
+		if (v->weapon_state > 4)
+			kill_monster(v);
+		v->weapon_state += 0.5;
+		if (v->weapon_state >= 4.9)
+			v->weapon_state = 0;
+	}
 }
 
 int		loop_hook(t_vars *v)
 {
 	update(v);
 	cast_rays(v);
+	draw_hud(v);
 	mlx_put_image_to_window(v->mlx, v->win, v->img.img, 0, 0);
 	return (0);
 }

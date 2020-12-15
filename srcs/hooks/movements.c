@@ -19,19 +19,19 @@ static void	move(t_vars *v, double x, double y)
 				&& v->player.angle < 7 * M_PI_4))
 	{
 		if (!is_wall(v, v->player.pos.x, y)
-				&& !is_sprite(v, v->player.pos.x, y))
+				&& !is_sprite_move(v, v->player.pos.x, y))
 			v->player.pos.y = y;
 		if (!is_wall(v, x, v->player.pos.y)
-				&& !is_sprite(v, x, v->player.pos.y))
+				&& !is_sprite_move(v, x, v->player.pos.y))
 			v->player.pos.x = x;
 	}
 	else
 	{
 		if (!is_wall(v, x, v->player.pos.y)
-				&& !is_sprite(v, x, v->player.pos.y))
+				&& !is_sprite_move(v, x, v->player.pos.y))
 			v->player.pos.x = x;
 		if (!is_wall(v, v->player.pos.x, y)
-				&& !is_sprite(v, v->player.pos.x, y))
+				&& !is_sprite_move(v, v->player.pos.x, y))
 			v->player.pos.y = y;
 	}
 }

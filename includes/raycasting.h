@@ -23,16 +23,21 @@
 # include "data_structures.h"
 # include "defines.h"
 
+void	get_angle_orientation(t_ray *ray);
 void	set_sprite_widthline(t_dline *line, t_dvector *center,
 		t_vars const *v);
 
+void	set_h_first_hit_and_step(t_ray *ray, t_vars const *v);
 void	search_h_wall_hit(t_ray *ray, t_vars const *v);
 void	display_h_wall(t_ray *ray, t_vars const *v);
 char	search_h_sprite_hit(t_ray *ray, t_vars const *v);
 
+void	set_v_first_hit_and_step(t_ray *ray, t_vars const *v);
 void	search_v_wall_hit(t_ray *ray, t_vars const *v);
 void	display_v_wall(t_ray *ray, t_vars const *v);
 char	search_v_sprite_hit(t_ray *ray, t_vars const *v);
+
+void	kill_monster(t_vars const *v);
 
 void	cast_rays(t_vars const *v);
 

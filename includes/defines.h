@@ -31,6 +31,7 @@
 # define UP 65362
 # define DOWN 65364
 # define LCTRL 65507
+# define F 102
 
 # define BLACK	0x00000000
 # define WHITE	0x00FFFFFF

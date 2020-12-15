@@ -39,15 +39,26 @@ void	draw_wall(unsigned const col, t_hit const *hit,
 	}
 }
 
-void	draw_sprite(unsigned const col, t_hit const *hit,
-		t_texture const *texture, t_vars const *v)
+static void	get_sprite_data(unsigned *texture_col, t_texture *texture,
+		t_hit const *hit, t_vars const *v)
+{
+
+	if (hit->map_char == 'h')
+		*texture = v->textures.regeneration;
+	else
+		*texture = v->textures.monster;
+	*texture_col = (double)hit->offset / ((double)BLOCK_SIZE / texture->width);
+}
+
+void	draw_sprite(unsigned const col, t_hit const *hit, t_vars const *v)
 {
 	unsigned	texture_col;
 	t_color		color;
 	int			y;
 	unsigned	i;
+	t_texture	texture;
 
-	texture_col = (double)hit->offset / ((double)BLOCK_SIZE / texture->width);
+	get_sprite_data(&texture_col, &texture, hit, v);
 	y = v->player.height - hit->height / 2;
 	i = 0;
 	while (i < hit->height)
@@ -56,8 +67,8 @@ void	draw_sprite(unsigned const col, t_hit const *hit,
 			break ;
 		if (y >= 0)
 		{
-			color.full = mlx_img_pixel_get_value(&texture->img, texture_col,
-					i * texture->height / hit->height);
+			color.full = mlx_img_pixel_get_value(&texture.img, texture_col,
+					i * texture.height / hit->height);
 			color = fog(color, hit->distance);
 			if (!color.bytes.alpha)
 				(*v->pixel_put_ft)(v, col, y, color);

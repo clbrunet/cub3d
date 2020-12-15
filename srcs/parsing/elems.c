@@ -50,32 +50,32 @@ static void	parse_texture(void *to_free, char const *line, t_texture *texture,
 			&texture->img.endian);
 }
 
-/* static void	parse_color(void *to_free, char const *line, t_color *color_ptr, */
-/* 		t_vars *v) */
-/* { */
-/* 	ft_trimspaces(&line); */
-/* 	color_ptr->bytes.alpha = 0; */
-/* 	if (!ft_isdigit(*line)) */
-/* 		error("Wrong colors infos", v, ERROR, to_free); */
-/* 	color_ptr->bytes.red = ft_atoitrim(&line); */
-/* 	if (*line == ',') */
-/* 		line++; */
-/* 	else */
-/* 		error("Wrong colors infos", v, ERROR, to_free); */
-/* 	if (!ft_isdigit(*line)) */
-/* 		error("Wrong colors infos", v, ERROR, to_free); */
-/* 	color_ptr->bytes.green = ft_atoitrim(&line); */
-/* 	if (*line == ',') */
-/* 		line++; */
-/* 	else */
-/* 		error("Wrong colors infos", v, ERROR, to_free); */
-/* 	if (!ft_isdigit(*line)) */
-/* 		error("Wrong colors infos", v, ERROR, to_free); */
-/* 	color_ptr->bytes.blue = ft_atoitrim(&line); */
-/* 	ft_trimspaces(&line); */
-/* 	if (*line) */
-/* 		error("Wrong colors infos", v, ERROR, to_free); */
-/* } */
+void	parse_color(void *to_free, char const *line, t_color *color_ptr,
+		t_vars *v)
+{
+	ft_trimspaces(&line);
+	color_ptr->bytes.alpha = 0;
+	if (!ft_isdigit(*line))
+		error("Wrong colors infos", v, ERROR, to_free);
+	color_ptr->bytes.red = ft_atoitrim(&line);
+	if (*line == ',')
+		line++;
+	else
+		error("Wrong colors infos", v, ERROR, to_free);
+	if (!ft_isdigit(*line))
+		error("Wrong colors infos", v, ERROR, to_free);
+	color_ptr->bytes.green = ft_atoitrim(&line);
+	if (*line == ',')
+		line++;
+	else
+		error("Wrong colors infos", v, ERROR, to_free);
+	if (!ft_isdigit(*line))
+		error("Wrong colors infos", v, ERROR, to_free);
+	color_ptr->bytes.blue = ft_atoitrim(&line);
+	ft_trimspaces(&line);
+	if (*line)
+		error("Wrong colors infos", v, ERROR, to_free);
+}
 
 static void	parse_elem(char const *line, t_vars *v)
 {
@@ -89,8 +89,12 @@ static void	parse_elem(char const *line, t_vars *v)
 		parse_texture((void *)line, line + 2, &v->textures.west, v);
 	else if (line[0] == 'E' && line[1] == 'A' && (line[2] == ' ' || !line[2]))
 		parse_texture((void *)line, line + 2, &v->textures.east, v);
-	else if (line[0] == 'S' && (line[1] == ' ' || !line[1]))
-		parse_texture((void *)line, line + 1, &v->textures.sprite, v);
+	else if (line[0] == 'M' && (line[1] == ' ' || !line[1]))
+		parse_texture((void *)line, line + 1, &v->textures.monster, v);
+	else if (line[0] == 'H' && (line[1] == ' ' || !line[1]))
+		parse_texture((void *)line, line + 1, &v->textures.regeneration, v);
+	else if (line[0] == 'h' && (line[1] == ' ' || !line[1]))
+		parse_texture((void *)line, line + 1, &v->textures.health, v);
 	else if (line[0] == 'F' && (line[1] == ' ' || !line[1]))
 		parse_texture((void *)line, line + 1, &v->textures.floor, v);
 	else if (line[0] == 'C' && (line[1] == ' ' || !line[1]))
@@ -106,7 +110,7 @@ void		parse_elems(char const *const scene_path, int const fd, t_vars *v)
 	int		count;
 
 	count = 0;
-	while (count < 8 && (ret = get_next_line(fd, &line)) >= 0)
+	while (count < 10 && (ret = get_next_line(fd, &line)) >= 0)
 	{
 		if (*line)
 		{
@@ -121,6 +125,6 @@ void		parse_elems(char const *const scene_path, int const fd, t_vars *v)
 		error(scene_path, v, PERROR, NULL);
 	else if (ret == -2)
 		error("Malloc failed", v, ERROR, NULL);
-	else if (count != 8)
+	else if (count != 10)
 		error("Wrong number of elements", v, ERROR, NULL);
 }

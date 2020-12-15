@@ -13,7 +13,7 @@
 #include "raycasting.h"
 #include "draw.h"
 
-static void	get_angle_orientation(t_ray *ray)
+void		get_angle_orientation(t_ray *ray)
 {
 	if (ray->angle < M_PI)
 		ray->orientation[0] = NORTH;
@@ -53,14 +53,14 @@ static void	search_sprites(t_ray *ray, t_vars const *v)
 					> 9999999999 || ray->h_hit.distance > ray->v_hit.distance))
 		{
 			if (ray->h_hit.distance < ray->wall_dist)
-				draw_sprite(ray->col, &ray->h_hit, &v->textures.sprite, v);
+				draw_sprite(ray->col, &ray->h_hit, v);
 			h_bool = 1;
 			search_h_sprite_hit(ray, v);
 		}
 		else if (ray->v_hit.distance < 9999999999)
 		{
 			if (ray->v_hit.distance < ray->wall_dist)
-				draw_sprite(ray->col, &ray->v_hit, &v->textures.sprite, v);
+				draw_sprite(ray->col, &ray->v_hit, v);
 			v_bool = 1;
 			search_v_sprite_hit(ray, v);
 		}

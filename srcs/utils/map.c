@@ -31,7 +31,40 @@ char	is_wall(t_vars const *v, unsigned x, unsigned y)
 
 char	is_sprite(t_vars const *v, unsigned x, unsigned y)
 {
-	if (v->map.grid[y >> BLOCK_SIZE_BIT][x >> BLOCK_SIZE_BIT] == 'S')
+	x >>= BLOCK_SIZE_BIT;
+	y >>= BLOCK_SIZE_BIT;
+	if (v->map.grid[y][x] == 'h' || v->map.grid[y][x] == 'm')
+		return (1);
+	return (0);
+}
+
+char	is_sprite_move(t_vars *v, unsigned x, unsigned y)
+{
+	x >>= BLOCK_SIZE_BIT;
+	y >>= BLOCK_SIZE_BIT;
+	if (!(v->map.grid[y][x] == 'h' || v->map.grid[y][x] == 'm'))
+		return (0);
+	if (v->map.grid[y][x] == 'h' && v->player.health < 5)
+	{
+		v->map.grid[y][x] = 'e';
+		v->player.health++;
+		return (0);
+	}
+	if (v->map.grid[y][x] == 'm')
+		v->player.health--;
+	if (v->player.health == 0)
+	{
+		ft_putendl_fd("You died", 1);
+		end(v);
+	}
+	return (1);
+}
+
+char	is_monster(t_vars const *v, unsigned x, unsigned y)
+{
+	x >>= BLOCK_SIZE_BIT;
+	y >>= BLOCK_SIZE_BIT;
+	if (v->map.grid[y][x] == 'm')
 		return (1);
 	return (0);
 }

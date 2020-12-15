@@ -13,7 +13,7 @@
 #include "raycasting.h"
 #include "draw.h"
 
-static void	set_h_first_hit_and_step(t_ray *ray, t_vars const *v)
+void		set_h_first_hit_and_step(t_ray *ray, t_vars const *v)
 {
 	ray->h_hit.pos.y = ((int)v->player.pos.y >> BLOCK_SIZE_BIT)
 		<< BLOCK_SIZE_BIT;
@@ -92,6 +92,8 @@ static char	check_in_h_sprite_width(t_ray *ray, t_vars const *v)
 		ray->h_hit.offset = (int)dist(line.p1, inter);
 		ray->h_hit.distance = playerdist_fisheyeless(inter, ray->angle, v);
 		ray->h_hit.height = BLOCK_SIZE / ray->h_hit.distance * v->project_dist;
+		ray->h_hit.map_char = v->map.grid[(int)center.y >> BLOCK_SIZE_BIT]
+			[(int)center.x >> BLOCK_SIZE_BIT];
 		return (1);
 	}
 	return (0);
