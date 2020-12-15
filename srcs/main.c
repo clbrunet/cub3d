@@ -80,6 +80,7 @@ static void	save(char const *const scene_path, char const *const save_flag)
 	v.pixel_put_ft = &bmp_data_pixel_put;
 	malloc_first_image_colors(&v);
 	cast_rays(&v);
+	draw_hud(&v);
 	write_bmp(&v);
 	free_strs(v.map.grid);
 	free_first_image_colors(v.first_image_colors);

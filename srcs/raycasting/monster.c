@@ -70,7 +70,7 @@ static void	search_v_monster(t_ray *ray, t_vars const *v)
 	}
 }
 
-void	kill_monster(t_vars const *v)
+void		kill_monster(t_vars const *v)
 {
 	t_ray	ray;
 

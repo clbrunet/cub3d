@@ -100,32 +100,6 @@ int		keyrelease_hook2(int keycode, t_vars *v)
 	return (0);
 }
 
-void	update(t_vars *v)
-{
-	if (v->keys.left)
-		v->player.angle = fix_angle(v->player.angle
-				+ deg_to_rad(v->player.speed / 3));
-	if (v->keys.right)
-		v->player.angle = fix_angle(v->player.angle
-				- deg_to_rad(v->player.speed / 3));
-	if (v->keys.up)
-		if (v->player.height + v->player.speed + 30 < v->res.y)
-		v->player.height += v->player.speed;
-	if (v->keys.down)
-		if ((signed)v->player.height - v->player.speed - 30 > 0)
-			v->player.height -= v->player.speed;
-	if (!two_axis_movements(v))
-		one_axis_movements(v);
-	if (v->weapon_state > 0.2 || v->keys.f)
-	{
-		if (v->weapon_state > 4)
-			kill_monster(v);
-		v->weapon_state += 0.5;
-		if (v->weapon_state >= 4.9)
-			v->weapon_state = 0;
-	}
-}
-
 int		loop_hook(t_vars *v)
 {
 	update(v);

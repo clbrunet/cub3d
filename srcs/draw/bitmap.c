@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "draw.h"
+#include "utils.h"
 
 char			*join_first_image_colors(unsigned size, t_vars const *v)
 {
@@ -48,7 +49,7 @@ static unsigned	write_headers(int const fd, t_vars const *v)
 	write(fd, "BM", 2);
 	file_size.full = 54 + 3 * v->res.x * v->res.y;
 	if (v->res.x % 4)
-		file_size.full += v->res.y * abs((int)v->res.x % 4 - 4);
+		file_size.full += v->res.y * ft_abs((int)v->res.x % 4 - 4);
 	write(fd, file_size.str, 4);
 	write(fd, "\0\0\0\0\x36\0\0\0\x28\0\0\0", 12);
 	width_then_height.full = v->res.x;

@@ -13,68 +13,22 @@
 #include "parsing.h"
 #include "get_next_line.h"
 
-static void	parse_res(void *to_free, char const *line, t_vars *v)
+static void	parse_elem2(char const *line, t_vars *v)
 {
-	int		screen_width;
-	int		screen_heigth;
-
-	ft_trimspaces(&line);
-	if (v->res.x != 0 || v->res.y != 0)
-		error("Multiple resolutions infos", v, ERROR, to_free);
-	v->res.x = ft_atoitrim(&line);
-	ft_trimspaces(&line);
-	v->res.y = ft_atoitrim(&line);
-	ft_trimspaces(&line);
-	if (*line || v->res.x == 0 || v->res.y == 0)
-		error("Wrong resolution infos", v, ERROR, to_free);
-	mlx_get_screen_size(v->mlx, &screen_width, &screen_heigth);
-	if (v->res.x > (unsigned)screen_width)
-		v->res.x = screen_width;
-	if (v->res.y > (unsigned)screen_heigth)
-		v->res.y = screen_heigth;
-}
-
-static void	parse_texture(void *to_free, char const *line, t_texture *texture,
-		t_vars *v)
-{
-	if (texture->width)
-		error("Multiple textures infos", v, ERROR, to_free);
-	ft_trimspaces(&line);
-	if (!*line)
-		error("Wrong textures infos", v, ERROR, to_free);
-	else if (!(texture->img.img = mlx_xpm_file_to_image(v->mlx, (char *)line,
-			&texture->width, &texture->height)))
-		error("Texture xpm file to image failed", v, ERROR, to_free);
-	texture->img.addr = mlx_get_data_addr(texture->img.img,
-			&texture->img.bits_per_pixel, &texture->img.line_length,
-			&texture->img.endian);
-}
-
-void	parse_color(void *to_free, char const *line, t_color *color_ptr,
-		t_vars *v)
-{
-	ft_trimspaces(&line);
-	color_ptr->bytes.alpha = 0;
-	if (!ft_isdigit(*line))
-		error("Wrong colors infos", v, ERROR, to_free);
-	color_ptr->bytes.red = ft_atoitrim(&line);
-	if (*line == ',')
-		line++;
+	if (line[0] == 'w' && line[1] == '0' && (line[2] == ' ' || !line[2]))
+		parse_texture((void *)line, line + 2, &v->textures.weapon[0], v);
+	else if (line[0] == 'w' && line[1] == '1' && (line[2] == ' ' || !line[2]))
+		parse_texture((void *)line, line + 2, &v->textures.weapon[1], v);
+	else if (line[0] == 'w' && line[1] == '2' && (line[2] == ' ' || !line[2]))
+		parse_texture((void *)line, line + 2, &v->textures.weapon[2], v);
+	else if (line[0] == 'w' && line[1] == '3' && (line[2] == ' ' || !line[2]))
+		parse_texture((void *)line, line + 2, &v->textures.weapon[3], v);
+	else if (line[0] == 'w' && line[1] == '4' && (line[2] == ' ' || !line[2]))
+		parse_texture((void *)line, line + 2, &v->textures.weapon[4], v);
+	else if (line[0] == 'w' && line[1] == '5' && (line[2] == ' ' || !line[2]))
+		parse_texture((void *)line, line + 2, &v->textures.weapon[5], v);
 	else
-		error("Wrong colors infos", v, ERROR, to_free);
-	if (!ft_isdigit(*line))
-		error("Wrong colors infos", v, ERROR, to_free);
-	color_ptr->bytes.green = ft_atoitrim(&line);
-	if (*line == ',')
-		line++;
-	else
-		error("Wrong colors infos", v, ERROR, to_free);
-	if (!ft_isdigit(*line))
-		error("Wrong colors infos", v, ERROR, to_free);
-	color_ptr->bytes.blue = ft_atoitrim(&line);
-	ft_trimspaces(&line);
-	if (*line)
-		error("Wrong colors infos", v, ERROR, to_free);
+		error("Wrong element, or missing element", v, ERROR, (void *)line);
 }
 
 static void	parse_elem(char const *line, t_vars *v)
@@ -99,8 +53,10 @@ static void	parse_elem(char const *line, t_vars *v)
 		parse_texture((void *)line, line + 1, &v->textures.floor, v);
 	else if (line[0] == 'C' && (line[1] == ' ' || !line[1]))
 		parse_texture((void *)line, line + 1, &v->textures.ceilling, v);
+	else if (line[0] == 'S' && (line[1] == ' ' || !line[1]))
+		parse_color((void *)line, line + 1, &v->fog, v);
 	else
-		error("Wrong element, or missing element", v, ERROR, (void *)line);
+		parse_elem2(line, v);
 }
 
 void		parse_elems(char const *const scene_path, int const fd, t_vars *v)
@@ -110,7 +66,7 @@ void		parse_elems(char const *const scene_path, int const fd, t_vars *v)
 	int		count;
 
 	count = 0;
-	while (count < 10 && (ret = get_next_line(fd, &line)) >= 0)
+	while (count < 17 && (ret = get_next_line(fd, &line)) >= 0)
 	{
 		if (*line)
 		{
@@ -125,6 +81,6 @@ void		parse_elems(char const *const scene_path, int const fd, t_vars *v)
 		error(scene_path, v, PERROR, NULL);
 	else if (ret == -2)
 		error("Malloc failed", v, ERROR, NULL);
-	else if (count != 10)
+	else if (count != 17)
 		error("Wrong number of elements", v, ERROR, NULL);
 }

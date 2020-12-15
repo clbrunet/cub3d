@@ -21,8 +21,7 @@
 # include "data_structures.h"
 # include "utils.h"
 
-void	one_axis_movements(t_vars *v);
-char	two_axis_movements(t_vars *v);
+void	update(t_vars *v);
 
 int		keypress_hook(int keycode, t_vars *v);
 int		keypress_hook2(int keycode, t_vars *v);

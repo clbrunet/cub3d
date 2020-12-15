@@ -6,13 +6,13 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 06:38:37 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/11 17:38:16 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/15 14:00:06 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-void	free_strs(char **strs)
+void		free_strs(char **strs)
 {
 	unsigned	i;
 
@@ -27,7 +27,23 @@ void	free_strs(char **strs)
 	free(strs);
 }
 
-void	destroy_textures(t_vars *v)
+static void	destroy_weapon_textures(t_vars *v)
+{
+	if (v->textures.weapon[0].width)
+		mlx_destroy_image(v->mlx, v->textures.weapon[0].img.img);
+	if (v->textures.weapon[1].width)
+		mlx_destroy_image(v->mlx, v->textures.weapon[1].img.img);
+	if (v->textures.weapon[2].width)
+		mlx_destroy_image(v->mlx, v->textures.weapon[2].img.img);
+	if (v->textures.weapon[3].width)
+		mlx_destroy_image(v->mlx, v->textures.weapon[3].img.img);
+	if (v->textures.weapon[4].width)
+		mlx_destroy_image(v->mlx, v->textures.weapon[4].img.img);
+	if (v->textures.weapon[5].width)
+		mlx_destroy_image(v->mlx, v->textures.weapon[5].img.img);
+}
+
+void		destroy_textures(t_vars *v)
 {
 	if (v->textures.east.width)
 		mlx_destroy_image(v->mlx, v->textures.east.img.img);
@@ -47,15 +63,10 @@ void	destroy_textures(t_vars *v)
 		mlx_destroy_image(v->mlx, v->textures.floor.img.img);
 	if (v->textures.ceilling.width)
 		mlx_destroy_image(v->mlx, v->textures.ceilling.img.img);
-	mlx_destroy_image(v->mlx, v->textures.weapon[0].img.img);
-	mlx_destroy_image(v->mlx, v->textures.weapon[1].img.img);
-	mlx_destroy_image(v->mlx, v->textures.weapon[2].img.img);
-	mlx_destroy_image(v->mlx, v->textures.weapon[3].img.img);
-	mlx_destroy_image(v->mlx, v->textures.weapon[4].img.img);
-	mlx_destroy_image(v->mlx, v->textures.weapon[5].img.img);
+	destroy_weapon_textures(v);
 }
 
-void	free_first_image_colors(t_bmp_color **first_image_colors)
+void		free_first_image_colors(t_bmp_color **first_image_colors)
 {
 	unsigned	i;
 
@@ -70,7 +81,7 @@ void	free_first_image_colors(t_bmp_color **first_image_colors)
 	free(first_image_colors);
 }
 
-void	malloc_first_image_colors(t_vars *v)
+void		malloc_first_image_colors(t_vars *v)
 {
 	unsigned	i;
 

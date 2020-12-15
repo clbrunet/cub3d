@@ -180,6 +180,7 @@ struct			s_vars
 	double		project_dist;
 	t_keys		keys;
 	double		weapon_state;
+	t_color		fog;
 };
 
 #endif

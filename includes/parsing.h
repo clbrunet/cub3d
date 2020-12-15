@@ -30,6 +30,12 @@
 void	error(char const *const error_msg, t_vars *v, t_error const error,
 		void *to_free);
 
+void	parse_res(void *to_free, char const *line, t_vars *v);
+void	parse_texture(void *to_free, char const *line, t_texture *texture,
+		t_vars *v);
+void	parse_color(void *to_free, char const *line, t_color *color_ptr,
+		t_vars *v);
+
 void	parse_elems(char const *const scene_path, int const fd, t_vars *v);
 void	check_elems(t_vars *v);
 

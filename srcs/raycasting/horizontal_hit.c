@@ -6,7 +6,7 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 13:38:58 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/11 12:16:42 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/15 14:55:19 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void		display_h_wall(t_ray *ray, t_vars const *v)
 	ray->h_hit.offset = (int)ray->h_hit.pos.x % BLOCK_SIZE;
 	if (ray->orientation[0] == SOUTH)
 	{
-		ray->h_hit.offset = abs((int)ray->h_hit.offset - (BLOCK_SIZE - 1));
+		ray->h_hit.offset = ft_abs((int)ray->h_hit.offset - (BLOCK_SIZE - 1));
 		draw_wall(ray->col, &ray->h_hit, &v->textures.south, v);
 	}
 	else

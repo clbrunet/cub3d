@@ -6,9 +6,15 @@ EA ./textures/jellyfish.xpm
 H ./textures/seashell_pearl.xpm
 h ./textures/bubble.xpm
 M ./textures/octopus.xpm
-
 C ./textures/underwater_sunshine.xpm
 F ./textures/sand.xpm
+S 0,0,100
+w0 ./textures/trident_0.xpm
+w1 ./textures/trident_1.xpm
+w2 ./textures/trident_2.xpm
+w3 ./textures/trident_3.xpm
+w4 ./textures/trident_4.xpm
+w5 ./textures/trident_5.xpm
 
 1111111111111111111111111
 10H0000000000000000000001

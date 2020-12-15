@@ -6,13 +6,13 @@
 /*   By: clbrunet <clbrunet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/11 17:54:08 by clbrunet          #+#    #+#             */
-/*   Updated: 2020/12/12 18:30:48 by clbrunet         ###   ########.fr       */
+/*   Updated: 2020/12/15 14:10:12 by clbrunet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "draw.h"
 
-t_color		fog(t_color color, double distance)
+static double	get_fog_ratio(double distance)
 {
 	double	fog_ratio;
 
@@ -34,13 +34,24 @@ t_color		fog(t_color color, double distance)
 		if (fog_ratio > 1)
 			fog_ratio = 1;
 	}
-	color.bytes.red = color.bytes.red * (1 - fog_ratio) + 0 * fog_ratio;
-	color.bytes.green = color.bytes.green * (1 - fog_ratio) + 60 * fog_ratio;
-	color.bytes.blue = color.bytes.blue * (1 - fog_ratio) + 180 * fog_ratio;
+	return (fog_ratio);
+}
+
+t_color			fog(t_color color, double distance, t_vars const *v)
+{
+	double	fog_ratio;
+
+	fog_ratio = get_fog_ratio(distance);
+	color.bytes.red = color.bytes.red * (1 - fog_ratio)
+		+ v->fog.bytes.red * fog_ratio;
+	color.bytes.green = color.bytes.green * (1 - fog_ratio)
+		+ v->fog.bytes.green * fog_ratio;
+	color.bytes.blue = color.bytes.blue * (1 - fog_ratio)
+		+ v->fog.bytes.blue * fog_ratio;
 	return (color);
 }
 
-void		mlx_img_pixel_put(t_vars const *v, unsigned const x,
+void			mlx_img_pixel_put(t_vars const *v, unsigned const x,
 		unsigned const y, t_color const color)
 {
 	char	*dst;
@@ -51,7 +62,7 @@ void		mlx_img_pixel_put(t_vars const *v, unsigned const x,
 	*(unsigned *)dst = color.full;
 }
 
-void		bmp_data_pixel_put(t_vars const *v, unsigned const x,
+void			bmp_data_pixel_put(t_vars const *v, unsigned const x,
 		unsigned const y, t_color const color)
 {
 	v->first_image_colors[y][x].bgr.blue = color.bytes.blue;
@@ -59,30 +70,11 @@ void		bmp_data_pixel_put(t_vars const *v, unsigned const x,
 	v->first_image_colors[y][x].bgr.red = color.bytes.red;
 }
 
-unsigned	mlx_img_pixel_get_value(t_img_data const *img_data, int x, int y)
+unsigned		mlx_img_pixel_get_value(t_img_data const *img_data,
+		int x, int y)
 {
 	char	*dst;
 
 	dst = img_data->addr + (y * img_data->line_length) + (x * 4);
 	return (*(unsigned *)dst);
-}
-
-void		mlx_clear_img(t_vars *v, int x, int y)
-{
-	int		i;
-	int		j;
-	t_color black;
-
-	black.full = BLACK;
-	i = 0;
-	while (i < y)
-	{
-		j = 0;
-		while (j < x)
-		{
-			mlx_img_pixel_put(v, j, i, black);
-			j++;
-		}
-		i++;
-	}
 }

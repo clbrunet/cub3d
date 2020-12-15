@@ -12,7 +12,25 @@
 
 #include "parsing.h"
 
-void	check_elems(t_vars *v)
+static void	check_elems2(t_vars *v)
+{
+	if (!v->textures.weapon[0].width)
+		error("Weapon 0 texture missing", v, ERROR, NULL);
+	else if (!v->textures.weapon[1].width)
+		error("Weapon 1 texture missing", v, ERROR, NULL);
+	else if (!v->textures.weapon[2].width)
+		error("Weapon 2 texture missing", v, ERROR, NULL);
+	else if (!v->textures.weapon[3].width)
+		error("Weapon 3 texture missing", v, ERROR, NULL);
+	else if (!v->textures.weapon[4].width)
+		error("Weapon 4 texture missing", v, ERROR, NULL);
+	else if (!v->textures.weapon[5].width)
+		error("Weapon 5 texture missing", v, ERROR, NULL);
+	else if (v->fog.full == (unsigned)-1)
+		error("Fog color missing", v, ERROR, NULL);
+}
+
+void		check_elems(t_vars *v)
 {
 	if (v->res.x == 0)
 		error("Resolution missing", v, ERROR, NULL);
@@ -34,4 +52,6 @@ void	check_elems(t_vars *v)
 		error("Floor texture missing", v, ERROR, NULL);
 	else if (!v->textures.ceilling.width)
 		error("Ceilling texture missing", v, ERROR, NULL);
+	else
+		check_elems2(v);
 }

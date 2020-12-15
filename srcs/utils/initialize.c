@@ -28,12 +28,19 @@ void	initialize_parsing(t_vars *v)
 	v->textures.monster.width = 0;
 	v->textures.floor.width = 0;
 	v->textures.ceilling.width = 0;
+	v->fog.full = (unsigned)-1;
 	v->map.grid = NULL;
 	v->first_image_colors = NULL;
 	v->win = NULL;
 	v->mlx = NULL;
 	v->img.img = NULL;
 	v->weapon_state = 0;
+	v->textures.weapon[0].width = 0;
+	v->textures.weapon[1].width = 0;
+	v->textures.weapon[2].width = 0;
+	v->textures.weapon[3].width = 0;
+	v->textures.weapon[4].width = 0;
+	v->textures.weapon[5].width = 0;
 }
 
 void	initialize_mlx(t_vars *v)
@@ -50,42 +57,6 @@ void	initialize_mlx(t_vars *v)
 	mlx_hook(v->win, KeyPress, KeyPressMask, &keypress_hook, v);
 	mlx_hook(v->win, KeyRelease, KeyReleaseMask, &keyrelease_hook, v);
 	mlx_hook(v->win, ClientMessage, StructureNotifyMask, &end, v);
-	if (!(v->textures.weapon[0].img.img = mlx_xpm_file_to_image(v->mlx, "./textures/trident_0.xpm",
-					&v->textures.weapon[0].width, &v->textures.weapon[0].height)))
-		error("Texture xpm file to image failed", v, ERROR, NULL);
-	v->textures.weapon[0].img.addr = mlx_get_data_addr(v->textures.weapon[0].img.img,
-			&v->textures.weapon[0].img.bits_per_pixel, &v->textures.weapon[0].img.line_length,
-			&v->textures.weapon[0].img.endian);
-	if (!(v->textures.weapon[1].img.img = mlx_xpm_file_to_image(v->mlx, "./textures/trident_1.xpm",
-					&v->textures.weapon[1].width, &v->textures.weapon[1].height)))
-		error("Texture xpm file to image failed", v, ERROR, NULL);
-	v->textures.weapon[1].img.addr = mlx_get_data_addr(v->textures.weapon[1].img.img,
-			&v->textures.weapon[1].img.bits_per_pixel, &v->textures.weapon[1].img.line_length,
-			&v->textures.weapon[1].img.endian);
-	if (!(v->textures.weapon[2].img.img = mlx_xpm_file_to_image(v->mlx, "./textures/trident_2.xpm",
-					&v->textures.weapon[2].width, &v->textures.weapon[2].height)))
-		error("Texture xpm file to image failed", v, ERROR, NULL);
-	v->textures.weapon[2].img.addr = mlx_get_data_addr(v->textures.weapon[2].img.img,
-			&v->textures.weapon[2].img.bits_per_pixel, &v->textures.weapon[2].img.line_length,
-			&v->textures.weapon[2].img.endian);
-	if (!(v->textures.weapon[3].img.img = mlx_xpm_file_to_image(v->mlx, "./textures/trident_3.xpm",
-					&v->textures.weapon[3].width, &v->textures.weapon[3].height)))
-		error("Texture xpm file to image failed", v, ERROR, NULL);
-	v->textures.weapon[3].img.addr = mlx_get_data_addr(v->textures.weapon[3].img.img,
-			&v->textures.weapon[3].img.bits_per_pixel, &v->textures.weapon[3].img.line_length,
-			&v->textures.weapon[3].img.endian);
-	if (!(v->textures.weapon[4].img.img = mlx_xpm_file_to_image(v->mlx, "./textures/trident_4.xpm",
-					&v->textures.weapon[4].width, &v->textures.weapon[4].height)))
-		error("Texture xpm file to image failed", v, ERROR, NULL);
-	v->textures.weapon[4].img.addr = mlx_get_data_addr(v->textures.weapon[4].img.img,
-			&v->textures.weapon[4].img.bits_per_pixel, &v->textures.weapon[4].img.line_length,
-			&v->textures.weapon[4].img.endian);
-	if (!(v->textures.weapon[5].img.img = mlx_xpm_file_to_image(v->mlx, "./textures/trident_5.xpm",
-					&v->textures.weapon[5].width, &v->textures.weapon[5].height)))
-		error("Texture xpm file to image failed", v, ERROR, NULL);
-	v->textures.weapon[5].img.addr = mlx_get_data_addr(v->textures.weapon[5].img.img,
-			&v->textures.weapon[5].img.bits_per_pixel, &v->textures.weapon[5].img.line_length,
-			&v->textures.weapon[5].img.endian);
 }
 
 void	initialize_keys(t_keys *keys)

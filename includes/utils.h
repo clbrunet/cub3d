@@ -42,6 +42,7 @@ double		rad_to_deg(double angle);
 double		fix_angle(double angle);
 
 int			ft_atoitrim(char const **nptr);
+int			ft_abs(int nb);
 
 char		is_in_map(t_vars const *v, int x, int y);
 char		is_wall(t_vars const *v, unsigned x, unsigned y);

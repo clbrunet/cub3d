@@ -66,7 +66,7 @@ void		display_v_wall(t_ray *ray, t_vars const *v)
 	ray->v_hit.offset = (int)ray->v_hit.pos.y % BLOCK_SIZE;
 	if (ray->orientation[1] == WEST)
 	{
-		ray->v_hit.offset = abs((int)ray->v_hit.offset - (BLOCK_SIZE - 1));
+		ray->v_hit.offset = ft_abs((int)ray->v_hit.offset - (BLOCK_SIZE - 1));
 		draw_wall(ray->col, &ray->v_hit, &v->textures.west, v);
 	}
 	else

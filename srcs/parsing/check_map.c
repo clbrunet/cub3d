@@ -71,15 +71,15 @@ void		check_map(t_vars *v, int y, int x)
 	else
 		v->map.grid[y][x] = 'e';
 	if (v->map.grid[y + 1][x] == '0' || v->map.grid[y + 1][x] == 'H'
-			 || v->map.grid[y + 1][x] == 'M')
+			|| v->map.grid[y + 1][x] == 'M')
 		check_map(v, y + 1, x);
 	if (v->map.grid[y - 1][x] == '0' || v->map.grid[y - 1][x] == 'H'
-			 || v->map.grid[y - 1][x] == 'M')
+			|| v->map.grid[y - 1][x] == 'M')
 		check_map(v, y - 1, x);
 	if (v->map.grid[y][x + 1] == '0' || v->map.grid[y][x + 1] == 'H'
-			 || v->map.grid[y][x + 1] == 'M')
+			|| v->map.grid[y][x + 1] == 'M')
 		check_map(v, y, x + 1);
 	if (v->map.grid[y][x - 1] == '0' || v->map.grid[y][x - 1] == 'H'
-			 || v->map.grid[y][x - 1] == 'M')
+			|| v->map.grid[y][x - 1] == 'M')
 		check_map(v, y, x - 1);
 }

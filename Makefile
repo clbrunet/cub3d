@@ -6,12 +6,13 @@ SRCS		=	srcs/main.c		\
 				srcs/get_next_line/get_next_line_utils.c	\
 				srcs/utils/initialize.c		\
 				srcs/utils/free.c			\
-				srcs/utils/ft_atoitrim.c	\
+				srcs/utils/fts.c			\
 				srcs/utils/angles.c			\
 				srcs/utils/map.c			\
 				srcs/utils/lines.c			\
 				srcs/parsing/base.c			\
 				srcs/parsing/elems.c		\
+				srcs/parsing/elems2.c		\
 				srcs/parsing/check_elems.c	\
 				srcs/parsing/map.c			\
 				srcs/parsing/check_map.c	\
@@ -23,6 +24,7 @@ SRCS		=	srcs/main.c		\
 				srcs/raycasting/monster.c			\
 				srcs/draw/base.c	\
 				srcs/draw/col.c		\
+				srcs/draw/col2.c	\
 				srcs/draw/bitmap.c	\
 				srcs/draw/hud.c
 
@@ -36,9 +38,9 @@ LIBSFLAGS	=	$(LIBFT) $(LIBMLX) -lXext -lX11 -lm
 
 
 CC			=	gcc
-# CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address \
+CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address \
 				-I./libft/ -I./minilibx_linux/ -I./includes/
-CFLAGS		=	-Wall -Wextra -Werror -O3 \
+# CFLAGS		=	-Wall -Wextra -Werror -O3 \
 				-I./libft/ -I./minilibx_linux/ -I./includes/
 
 all			:	$(NAME)

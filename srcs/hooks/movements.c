@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "hooks.h"
+#include "raycasting.h"
 
 static void	move(t_vars *v, double x, double y)
 {
@@ -36,7 +37,7 @@ static void	move(t_vars *v, double x, double y)
 	}
 }
 
-char		two_axis_movements(t_vars *v)
+static char	two_axis_movements(t_vars *v)
 {
 	if (v->keys.z && !v->keys.s && v->keys.q && !v->keys.d)
 		move(v, v->player.pos.x + cos(fix_angle(v->player.angle + M_PI_4))
@@ -63,7 +64,7 @@ char		two_axis_movements(t_vars *v)
 	return (1);
 }
 
-void		one_axis_movements(t_vars *v)
+static void	one_axis_movements(t_vars *v)
 {
 	if (v->keys.z && !v->keys.s)
 		move(v, v->player.pos.x + cos(v->player.angle) * v->player.speed,
@@ -83,4 +84,30 @@ void		one_axis_movements(t_vars *v)
 				* (v->player.speed / 3 * 2),
 				v->player.pos.y + sin(fix_angle(v->player.angle + M_PI_2))
 				* (v->player.speed / 3 * 2));
+}
+
+void		update(t_vars *v)
+{
+	if (v->keys.left)
+		v->player.angle = fix_angle(v->player.angle
+				+ deg_to_rad(v->player.speed / 3));
+	if (v->keys.right)
+		v->player.angle = fix_angle(v->player.angle
+				- deg_to_rad(v->player.speed / 3));
+	if (v->keys.up)
+		if (v->player.height + v->player.speed + 30 < v->res.y)
+			v->player.height += round(v->player.speed);
+	if (v->keys.down)
+		if ((signed)v->player.height - v->player.speed - 30 > 0)
+			v->player.height -= round(v->player.speed);
+	if (!two_axis_movements(v))
+		one_axis_movements(v);
+	if (v->weapon_state > 0.2 || v->keys.f)
+	{
+		if (v->weapon_state > 5)
+			kill_monster(v);
+		v->weapon_state += 0.5;
+		if (v->weapon_state >= 5.9)
+			v->weapon_state = 0;
+	}
 }
