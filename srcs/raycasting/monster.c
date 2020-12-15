@@ -19,7 +19,7 @@ static void	search_h_monster(t_ray *ray, t_vars const *v)
 	if (ray->orientation[0] == NORTH)
 		ray->h_hit.pos.y--;
 	if (!is_in_map(v, ray->h_hit.pos.x, ray->h_hit.pos.y)
-			|| is_wall(v, ray->h_hit.pos.x, ray->h_hit.pos.y))
+			|| is_real_wall(v, ray->h_hit.pos.x, ray->h_hit.pos.y))
 		return ;
 	else if (is_monster(v, ray->h_hit.pos.x, ray->h_hit.pos.y))
 	{
@@ -29,7 +29,7 @@ static void	search_h_monster(t_ray *ray, t_vars const *v)
 	}
 	ray->h_hit.pos = dvectoradd(ray->h_hit.pos, ray->h_step);
 	while (is_in_map(v, ray->h_hit.pos.x, ray->h_hit.pos.y)
-			&& !is_wall(v, ray->h_hit.pos.x, ray->h_hit.pos.y))
+			&& !is_real_wall(v, ray->h_hit.pos.x, ray->h_hit.pos.y))
 	{
 		if (is_monster(v, ray->h_hit.pos.x, ray->h_hit.pos.y))
 		{
@@ -48,7 +48,7 @@ static void	search_v_monster(t_ray *ray, t_vars const *v)
 	if (ray->orientation[1] == WEST)
 		ray->v_hit.pos.x--;
 	if (!is_in_map(v, ray->v_hit.pos.x, ray->v_hit.pos.y)
-			|| is_wall(v, ray->v_hit.pos.x, ray->v_hit.pos.y))
+			|| is_real_wall(v, ray->v_hit.pos.x, ray->v_hit.pos.y))
 		return ;
 	else if (is_monster(v, ray->v_hit.pos.x, ray->v_hit.pos.y))
 	{
@@ -58,7 +58,7 @@ static void	search_v_monster(t_ray *ray, t_vars const *v)
 	}
 	ray->v_hit.pos = dvectoradd(ray->v_hit.pos, ray->v_step);
 	while (is_in_map(v, ray->v_hit.pos.x, ray->v_hit.pos.y)
-			&& !is_wall(v, ray->v_hit.pos.x, ray->v_hit.pos.y))
+			&& !is_real_wall(v, ray->v_hit.pos.x, ray->v_hit.pos.y))
 	{
 		if (is_monster(v, ray->v_hit.pos.x, ray->v_hit.pos.y))
 		{

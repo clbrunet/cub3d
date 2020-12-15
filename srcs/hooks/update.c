@@ -13,25 +13,47 @@
 #include "hooks.h"
 #include "raycasting.h"
 
+static char	is_sprite_move(t_vars *v, unsigned x, unsigned y)
+{
+	x >>= BLOCK_SIZE_BIT;
+	y >>= BLOCK_SIZE_BIT;
+	if (!(v->map.grid[y][x] == 'h' || v->map.grid[y][x] == 'm'))
+		return (0);
+	if (v->map.grid[y][x] == 'h' && v->player.health < 5)
+	{
+		v->map.grid[y][x] = 'e';
+		v->player.health++;
+		return (0);
+	}
+	if (v->map.grid[y][x] == 'm')
+		v->player.health--;
+	if (v->player.health == 0)
+	{
+		ft_putendl_fd("You died", 1);
+		end(v);
+	}
+	return (1);
+}
+
 static void	move(t_vars *v, double x, double y)
 {
 	if ((M_PI_4 < v->player.angle && v->player.angle < M_PI - M_PI_4)
 			|| (M_PI + M_PI_4 < v->player.angle
 				&& v->player.angle < 7 * M_PI_4))
 	{
-		if (!is_wall(v, v->player.pos.x, y)
+		if (!is_real_wall(v, v->player.pos.x, y)
 				&& !is_sprite_move(v, v->player.pos.x, y))
 			v->player.pos.y = y;
-		if (!is_wall(v, x, v->player.pos.y)
+		if (!is_real_wall(v, x, v->player.pos.y)
 				&& !is_sprite_move(v, x, v->player.pos.y))
 			v->player.pos.x = x;
 	}
 	else
 	{
-		if (!is_wall(v, x, v->player.pos.y)
+		if (!is_real_wall(v, x, v->player.pos.y)
 				&& !is_sprite_move(v, x, v->player.pos.y))
 			v->player.pos.x = x;
-		if (!is_wall(v, v->player.pos.x, y)
+		if (!is_real_wall(v, v->player.pos.x, y)
 				&& !is_sprite_move(v, v->player.pos.x, y))
 			v->player.pos.y = y;
 	}

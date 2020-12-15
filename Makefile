@@ -1,7 +1,6 @@
 NAME		=	Cub3D
 
 SRCS		=	srcs/main.c		\
-				srcs/debug.c	\
 				srcs/get_next_line/get_next_line.c			\
 				srcs/get_next_line/get_next_line_utils.c	\
 				srcs/utils/initialize.c		\
@@ -17,7 +16,7 @@ SRCS		=	srcs/main.c		\
 				srcs/parsing/map.c			\
 				srcs/parsing/check_map.c	\
 				srcs/hooks/base.c	\
-				srcs/hooks/movements.c	\
+				srcs/hooks/update.c	\
 				srcs/raycasting/base.c				\
 				srcs/raycasting/horizontal_hit.c	\
 				srcs/raycasting/vertical_hit.c		\
@@ -38,9 +37,7 @@ LIBSFLAGS	=	$(LIBFT) $(LIBMLX) -lXext -lX11 -lm
 
 
 CC			=	gcc
-CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address \
-				-I./libft/ -I./minilibx_linux/ -I./includes/
-# CFLAGS		=	-Wall -Wextra -Werror -O3 \
+CFLAGS		=	-Wall -Wextra -Werror	\
 				-I./libft/ -I./minilibx_linux/ -I./includes/
 
 all			:	$(NAME)
@@ -54,6 +51,7 @@ $(LIBMLX)	:
 $(NAME)		:	$(LIBFT) $(LIBMLX) $(OBJS)
 				$(CC) $(CFLAGS) $(OBJS) $(LIBSFLAGS) -o $(NAME)
 
+bonus		:	$(NAME)
 
 cl			:
 				rm -f $(OBJS)

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <X11/X.h>
+#include <stdio.h>
 
 #include "parsing.h"
 #include "hooks.h"

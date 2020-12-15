@@ -48,7 +48,7 @@ void		check_map_chars(t_vars *v)
 				set_player_props(v, v->map.grid[i][j], i, j);
 				count++;
 			}
-			else if (!ft_strchr(" 01HM", v->map.grid[i][j]))
+			else if (!ft_strchr(" 012HM", v->map.grid[i][j]))
 				error("Map contains wrong chars", v, ERROR, NULL);
 		}
 	}
@@ -68,18 +68,20 @@ void		check_map(t_vars *v, int y, int x)
 		v->map.grid[y][x] = 'h';
 	else if (v->map.grid[y][x] == 'M')
 		v->map.grid[y][x] = 'm';
+	else if (v->map.grid[y][x] == '2')
+		v->map.grid[y][x] = 'f';
 	else
 		v->map.grid[y][x] = 'e';
 	if (v->map.grid[y + 1][x] == '0' || v->map.grid[y + 1][x] == 'H'
-			|| v->map.grid[y + 1][x] == 'M')
+			|| v->map.grid[y + 1][x] == 'M' || v->map.grid[y + 1][x] == '2')
 		check_map(v, y + 1, x);
 	if (v->map.grid[y - 1][x] == '0' || v->map.grid[y - 1][x] == 'H'
-			|| v->map.grid[y - 1][x] == 'M')
+			|| v->map.grid[y - 1][x] == 'M' || v->map.grid[y - 1][x] == '2')
 		check_map(v, y - 1, x);
 	if (v->map.grid[y][x + 1] == '0' || v->map.grid[y][x + 1] == 'H'
-			|| v->map.grid[y][x + 1] == 'M')
+			|| v->map.grid[y][x + 1] == 'M' || v->map.grid[y][x + 1] == '2')
 		check_map(v, y, x + 1);
 	if (v->map.grid[y][x - 1] == '0' || v->map.grid[y][x - 1] == 'H'
-			|| v->map.grid[y][x - 1] == 'M')
+			|| v->map.grid[y][x - 1] == 'M' || v->map.grid[y][x - 1] == '2')
 		check_map(v, y, x - 1);
 }

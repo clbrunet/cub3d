@@ -1,6 +1,0 @@
--Wall
--Wextra
--Werror
--I./libft/
--I./minilibx_linux/
--I./includes/

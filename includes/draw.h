@@ -13,13 +13,12 @@
 #ifndef DRAW_H
 # define DRAW_H
 
-# include "debug.h"
-
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <math.h>
 
 # include "mlx.h"
 # include "defines.h"

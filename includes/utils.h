@@ -13,8 +13,6 @@
 #ifndef UTILS_H
 # define UTILS_H
 
-# include "debug.h"
-
 # include <X11/X.h>
 # include <stdlib.h>
 # include <math.h>
@@ -46,8 +44,8 @@ int			ft_abs(int nb);
 
 char		is_in_map(t_vars const *v, int x, int y);
 char		is_wall(t_vars const *v, unsigned x, unsigned y);
+char		is_real_wall(t_vars const *v, unsigned x, unsigned y);
 char		is_sprite(t_vars const *v, unsigned x, unsigned y);
-char		is_sprite_move(t_vars *v, unsigned x, unsigned y);
 char		is_monster(t_vars const *v, unsigned x, unsigned y);
 
 t_dvector	dvectoradd(t_dvector v1, t_dvector v2);

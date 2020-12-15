@@ -81,7 +81,6 @@ static void		addspaces(t_vars *v, char const ***strs_ptr)
 
 static void		set_map_props(t_map *map)
 {
-	map->minimap_factor = 0.2;
 	map->max.x = ft_strlen(map->grid[0]);
 	map->max.y = ft_strslen((const char **)map->grid);
 }
